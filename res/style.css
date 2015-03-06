@@ -1,0 +1,26 @@
+/* The page wrapper */
+#wrapper{
+	display: inline-block
+	width: 100%;
+}
+
+/*  */
+.gridBox{
+	display: inline-block;
+	width: 500px;
+	margin: 10px;
+
+}
+
+.gridBox img{
+	
+	width: 100%;
+
+}
+
+/*  */
+.cameraImg{
+
+
+
+}

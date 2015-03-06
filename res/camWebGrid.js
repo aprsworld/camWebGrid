@@ -57,17 +57,29 @@ var sourceRefreshSeconds;
 var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var urlParamObjs;
+var timers;
 
 /* This function takes the sourceThumbnailURL array and creates a grid based on it */
-function createCamBlocks( sourceThumbnailURL ) {
+function createCamBlocks( sourceThumbnailURL, sourceRefreshSeconds ) {
 
+	timers=[];
+
+	/* iterate through urls */
 	for ( var i = 0 ; i < sourceThumbnailURL.length ; i++ ) {
 
-		$("#wrapper").append(sourceThumbnailURL[i]+"<br>");
+		/* create camera block */
+		$("#wrapper").append("<div class=\"gridBox\"><img src="+decodeURIComponent(sourceThumbnailURL[i])+" ><div>");
+		
+		/* create timers for updating */
+		//createTimer(i,sourceRefreshSeconds[i]);
+		timers[i] = function(){ console.log("x"); setTimeout(timers[i],1000) }
+		timers[i]();
+		
 
 	}
 
 }
+
 
 
 $( document ).ready(function(){
@@ -102,7 +114,8 @@ $( document ).ready(function(){
 
 	}
 
-	createCamBlocks(sourceThumbnailURL);
+
+	createCamBlocks(sourceThumbnailURL,sourceRefreshSeconds);
 	
 
 });
