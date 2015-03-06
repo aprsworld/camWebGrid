@@ -4,9 +4,6 @@
         required
         URL where we get our primary image from
 
--> sourceFullURL
-        can be null or undefined
-        if present, this is the URL where we can get a native resolution image from
 
 -> sourceMetaJSON
         can be null or undefined.
@@ -48,7 +45,6 @@
 */
 
 var sourceURL;
-var sourceFullURL;
 var sourceMetaJSON;
 var sourceMetaRefreshSeconds;
 var sourceLinkToFullURL;
@@ -75,26 +71,37 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 			imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
 		} else {
 			if ( typeof sourceLinkToFullURL[i] === 'undefined' ) {
-
 				imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
 			} else {
 				imageLink = "<a href=\""+sourceLinkToFullURL[i]+"\" ><img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" ></a>";				
 			}
 		}		
-
+		
 		var overlay = "";
 
+		/* If we have an overlay set, put it at the top of the image */
 		if ( typeof sourceOverlayTextTop !== 'undefined' ) {
 			if ( typeof sourceOverlayTextTop[i] !== 'undefined' ) overlay = "<span class=\"imageOverlay\">"+sourceOverlayTextTop[i]+"</span>";
 		}
 
 		/* create camera block */
-		$("#wrapper").append("<div class=\"gridBox\">"+imageLink+"<span class=\"imageTimer\">Updated <span id=\"timer"+i+"\"></span> ago.</span>"+overlay+"<div>");
+		$("#wrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">STALE</span>"+imageLink+"<span class=\"imageTimer\">Updated <span id=\"timer"+i+"\"></span> ago.</span>"+overlay+"<div>");
 
 
 
 		/* create entry for camera seconds */
 		cameraSeconds[i]=0;
+
+		/* get the seconds from JSON and update the ui */
+		if ( typeof sourceMetaJSON !== 'undefined' ) {
+			if ( typeof sourceMetaJSON[i] !== 'undefined' ) {
+				console.log("json on index: "+i);
+				getMetaJSON( sourceMetaJSON[i], i );
+				console.log(cameraSeconds[i]);
+
+			}
+
+		}
 		
 
 	}
@@ -104,18 +111,64 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 
 }
 
+/* updates the UI for json cameras. Also returns age in seconds */
 
+function getMetaJSON ( url, index ) {
+	
+	$.getJSON(url,
+		function (data) {
+			
+			cameraSeconds[index] = data.ageSeconds;
+				
+			if ( $("#cameraImage"+index).attr("src") != data.fileURL )		
+				$("#cameraImage"+index).attr("src",data.fileURL);
+
+
+		} 
+	);
+	
+}
 
 /* update the image at the given index */
 function updateCameraImg( index ) {
 
-	//console.log("update camera at index: "+index);
+	
+	/* if sourceMetaJSON is set for this index, get data through AJAX */
+	if ( typeof sourceMetaJSON !== 'undefined' ) {
 
-	/* this is for urls using latest.jpg */
-	$("#cameraImage"+index).attr("src",$("#cameraImage"+index).attr("src")+"?"+ new Date().getTime());
+		if ( typeof sourceMetaJSON[index] !== 'undefined' ) {
+
+			getMetaJSON( sourceMetaJSON[index], index );
+
+		} else {
+			/* this is for urls using latest.jpg */
+			$("#cameraImage"+index).attr("src",$("#cameraImage"+index).attr("src")+"?"+ new Date().getTime());
+
+			/* cannot go stale without json, so just reset the timer to 0 */
+			cameraSeconds[index] = 0;
+		}
+
+	} else {
+		/* this is for urls using latest.jpg */
+		$("#cameraImage"+index).attr("src",$("#cameraImage"+index).attr("src")+"?"+ new Date().getTime());
+
+		/* cannot go stale without json, so just reset the timer to 0 */
+		cameraSeconds[index] = 0;
+	}
 
 }
 
+/* if an image is stale */
+function stale( index ){
+
+	console.log("stale at index: "+index);
+	$("#stale"+index).show();
+	
+	
+
+}
+
+/* main timer */
 function timerTick(){
 
 
@@ -125,12 +178,37 @@ function timerTick(){
 		cameraSeconds[i]++;
 		$("#timer"+i).html(secToTime(cameraSeconds[i]));
 
-		/* if the second count equals sourceRefreshSeconds, update the image and reset second count */
-		
+		/* if the second count equals sourceRefreshSeconds, update the image */
 		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] ) {
-			cameraSeconds[i] = 0;
+			
 			updateCameraImg(i);
 		}
+
+		/* check if stale */
+		$("#stale"+i).hide();
+		if ( typeof sourceStaleSeconds !== 'undefined' ) {
+
+			if ( typeof sourceStaleSeconds[i] !== 'undefined' ) {
+
+				if ( cameraSeconds[i] >= sourceStaleSeconds[i] ) {
+
+					stale(i);
+
+				}
+
+			} else if ( cameraSeconds[i] >= ( sourceRefreshSeconds[i] * 2 + 5 ) ) {
+
+				stale(i);
+
+			}
+
+		} else if ( cameraSeconds[i] >= ( sourceRefreshSeconds[i] * 2 + 5 ) ) {
+
+			stale(i);
+
+		}
+		
+
 	}
 
 	/* call function again in 1 second */
@@ -172,12 +250,7 @@ $( document ).ready(function(){
 
 	
 
-	if ( urlParamObjs.hasOwnProperty("sourceFullURL") ) {
-
-		sourceFullURL = urlParamObjs.sourceFullURL;
-
-	}
-
+	/* retrieve all the parameters we can, otherwise leave them undefined */
 	if ( urlParamObjs.hasOwnProperty("sourceMetaJSON") ) {
 
 		sourceMetaJSON = urlParamObjs.sourceMetaJSON;
@@ -214,7 +287,7 @@ $( document ).ready(function(){
 
 	}
 
-
+	/* create the grid */
 	createCamBlocks(sourceURL,sourceRefreshSeconds);
 	
 
