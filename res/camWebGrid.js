@@ -57,7 +57,7 @@ var sourceRefreshSeconds;
 var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var urlParamObjs;
-var timers;
+var cameraSeconds=[];
 
 /* This function takes the sourceThumbnailURL array and creates a grid based on it */
 function createCamBlocks( sourceThumbnailURL, sourceRefreshSeconds ) {
@@ -68,19 +68,45 @@ function createCamBlocks( sourceThumbnailURL, sourceRefreshSeconds ) {
 	for ( var i = 0 ; i < sourceThumbnailURL.length ; i++ ) {
 
 		/* create camera block */
-		$("#wrapper").append("<div class=\"gridBox\"><img src="+decodeURIComponent(sourceThumbnailURL[i])+" ><div>");
+		$("#wrapper").append("<div class=\"gridBox\"><img src="+decodeURIComponent(sourceThumbnailURL[i])+" ><span>timer goes here</span><div>");
 		
-		/* create timers for updating */
-		//createTimer(i,sourceRefreshSeconds[i]);
-		timers[i] = function(){ console.log("x"); setTimeout(timers[i],1000) }
-		timers[i]();
+		/* create entry for camera seconds */
+		cameraSeconds[i]=0;
 		
 
 	}
+	
+	/* start timer */
+	timerTick();
 
 }
 
+/* update the image at the given index */
+function updateCameraImg( index ) {
 
+	
+
+}
+
+function timerTick(){
+
+	//console.log("tick");
+
+	/* iterate through camera seconds and increment the second count */
+	for (var i = 0 ; i < cameraSeconds.length ; i++ ) {
+		cameraSeconds[i]++;
+		console.log(cameraSeconds[i]);
+		/* if the second count equals sourceRefreshSeconds, update the image and reset second count */
+		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] ) {
+			cameraSeconds[i] = 0;
+			updateCameraImg(i);
+			console.log("update image at index: " + i );
+		}
+	}
+	/* call function again in 1 second */
+	setTimeout( timerTick, 1000 );
+
+}
 
 $( document ).ready(function(){
 	
