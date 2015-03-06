@@ -125,7 +125,8 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		
 
 	}
-	$(".gridBox").css( "width", (100/sourceURL.length*.9)+"%" );
+	resize();
+	//$(".gridBox").css( "width", "48%" );
 	/* start timer */
 	timerTick();
 
@@ -187,6 +188,12 @@ function stale( index ){
 	
 }
 
+function resize(){
+	$(".gridBox").css( "height", ((($(window).height()*.8)/2)+"px" ));
+	$(".gridBox").css( "width", ((($(window).width()*.8)/2)+"px" ));
+
+}
+
 /* main timer */
 function timerTick(){
 
@@ -214,7 +221,7 @@ function timerTick(){
 
 			if ( typeof sourceMetaRefreshSeconds[i] !== 'undefined' ) {
 
-				if (  ) {
+				if ( sourceMetaRefreshSeconds[i] ) {
 
 				}
 
@@ -261,8 +268,9 @@ $( document ).ready(function(){
 	console.log("ready");
 
 	/* retrieve the parameters in the url and stores them into an object */
-	urlParamObjs = $.parseParams(window.location);
-
+//	urlParamObjs = $.parseParams(window.location);
+	urlParamObjs = $.parseParams(settings);
+	
 	console.log(urlParamObjs);
 
 	/* Check for all required parameters */
@@ -326,7 +334,9 @@ $( document ).ready(function(){
 		sourceOverlayTextTop = urlParamObjs.sourceOverlayTextTop;
 
 	}
-
+	$(window).resize(function() {
+		resize();
+	});
 	/* create the grid */
 	createCamBlocks(sourceURL,sourceRefreshSeconds);
 	
