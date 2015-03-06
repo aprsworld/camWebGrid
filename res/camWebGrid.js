@@ -66,6 +66,26 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 
 		var imageLink = "";
 
+		
+		var newTab = "";
+
+		/* if sourceLinkToFullURL is set, then we want to add a link to the image when pressed */
+		if ( typeof sourceLinkToFullURLBehavior === 'undefined' ) {
+			newTab = "";
+		} else {
+			if ( typeof sourceLinkToFullURLBehavior[i] === 'undefined' ) {
+				newTab = "";
+			} else {
+				if ( sourceLinkToFullURLBehavior[i] == "newTab" ) {
+
+					newTab = "target=\"_blank\"";	
+
+				} else if ( sourceLinkToFullURLBehavior[i] == "newWindow" ) {	
+					newTab="onclick=\"window.open('"+decodeURIComponent(sourceURL[i])+"', 'newwindow', 'width=300, height=250'); return false;\"";		
+				}
+			}
+		}	
+
 		/* if sourceLinkToFullURL is set, then we want to add a link to the image when pressed */
 		if ( typeof sourceLinkToFullURL === 'undefined' ) {
 			imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
@@ -73,7 +93,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 			if ( typeof sourceLinkToFullURL[i] === 'undefined' ) {
 				imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
 			} else {
-				imageLink = "<a href=\""+sourceLinkToFullURL[i]+"\" ><img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" ></a>";				
+				imageLink = "<a href=\""+sourceLinkToFullURL[i]+"\" "+newTab+" ><img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\"  ></a>";				
 			}
 		}		
 		
@@ -85,7 +105,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#wrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">STALE</span>"+imageLink+"<span class=\"imageTimer\">Updated <span id=\"timer"+i+"\"></span> ago.</span>"+overlay+"<div>");
+		$("#wrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
 
 
 
@@ -162,10 +182,9 @@ function updateCameraImg( index ) {
 function stale( index ){
 
 	console.log("stale at index: "+index);
+	$("#stale"+index).html("Stale: Updated "+ secToTime(cameraSeconds[index]) +" ago X");
 	$("#stale"+index).show();
 	
-	
-
 }
 
 /* main timer */
@@ -176,13 +195,33 @@ function timerTick(){
 	for (var i = 0 ; i < cameraSeconds.length ; i++ ) {
 
 		cameraSeconds[i]++;
-		$("#timer"+i).html(secToTime(cameraSeconds[i]));
+		
+		if ( sourceRefreshSeconds[i] - cameraSeconds[i] >= 0 ) {
+
+			$("#timer"+i).html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
+
+		} 
 
 		/* if the second count equals sourceRefreshSeconds, update the image */
-		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] ) {
+		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] && cameraSeconds[i] % 10 == 0 ) {
 			
 			updateCameraImg(i);
 		}
+
+
+		/* check if we should query for metaData 
+		if ( typeof sourceMetaRefreshSeconds !== 'undefined' ) {
+
+			if ( typeof sourceMetaRefreshSeconds[i] !== 'undefined' ) {
+
+				if (  ) {
+
+				}
+
+			}
+
+		}
+*/
 
 		/* check if stale */
 		$("#stale"+i).hide();
@@ -207,14 +246,15 @@ function timerTick(){
 			stale(i);
 
 		}
-		
 
+		
 	}
 
 	/* call function again in 1 second */
 	setTimeout( timerTick, 1000 );
 
 }
+
 
 $( document ).ready(function(){
 	
