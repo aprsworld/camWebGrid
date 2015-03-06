@@ -1,26 +1,51 @@
 /* The page wrapper */
 #wrapper{
-	display: inline-block
+	/*display: inline-block;*/
 	width: 100%;
 }
 
-/*  */
+/* container for the images */
 .gridBox{
-	display: inline-block;
+	/*display: inline-block;
 	width: 500px;
 	margin: 10px;
+	position: relative;*/
+	position: relative;
+	float:left;
+	width : 10%;
+	margin: 10px;
+	max-width : 100%;
+	min-width : 500px;
 
 }
 
+/* image in container */
 .gridBox img{
 	
 	width: 100%;
 
 }
 
-/*  */
-.cameraImg{
 
-
+/* timer for the image */
+.gridBox .imageTimer{
+	position: absolute;
+	width: 100%;
+	bottom: 5px;
+	left: 0px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.75);
 
 }
+
+/* image overlay text */
+.gridBox .imageOverlay{
+	position: absolute;
+	width: 100%;
+	top: 0px;
+	left: 0px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.75);
+
+}
+
