@@ -63,7 +63,7 @@ function createCamBlocks( sourceThumbnailURL ) {
 
 	for ( var i = 0 ; i < sourceThumbnailURL.length ; i++ ) {
 
-		$("wrapper").append(sourceThumbnailURL[i]+"<br>");
+		$("#wrapper").append(sourceThumbnailURL[i]+"<br>");
 
 	}
 
@@ -74,12 +74,35 @@ $( document ).ready(function(){
 	
 	console.log("ready");
 
+	/* retrieve the parameters in the url and stores them into an object */
 	urlParamObjs = $.parseParams(window.location);
 
 	console.log(urlParamObjs);
 
-	if ( urlParamObjs.hasOwnProperty("sourdceThumbnailURL") ) {
-		console.log("ok");
+	/* Check for all required parameters */
+	if ( urlParamObjs.hasOwnProperty("sourceThumbnailURL") && urlParamObjs.hasOwnProperty("sourceRefreshSeconds") ) {
+
+		sourceThumbnailURL = urlParamObjs.sourceThumbnailURL;
+		sourceRefreshSeconds = urlParamObjs.sourceRefreshSeconds;
+
+	} else {
+
+		console.log("cannot continue, missing sourceThumbnailURL or sourceRefreshSeconds");
+		$("#wrapper").append("<h1>Error: Missing one or more required parameters: sourceThumbnailURL or sourceRefreshSeconds</h1><br>");
+		return;
+
 	}
+
+	/* make sure the two required parameters are the same length */
+	if ( sourceThumbnailURL.length != sourceRefreshSeconds.length ) {
+
+		console.log("cannot continue, sourceThumbnailURL array is not the same size as sourceRefreshSeconds array");
+		$("#wrapper").append("<h1>Error: sourceThumbnailURL array size is not equal to sourceRefreshSeconds array</h1><br>");
+		return;
+
+	}
+
+	createCamBlocks(sourceThumbnailURL);
+	
 
 });
