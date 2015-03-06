@@ -262,6 +262,16 @@ function timerTick(){
 
 }
 
+function overrideSettings(){
+	var urlParamObjsOver = $.parseParams(window.location);
+
+	for(var index in urlParamObjsOver) { 
+		if (urlParamObjsOver.hasOwnProperty(index)) {
+			urlParamObjs[index] = urlParamObjsOver[index];
+		}
+	}
+
+}
 
 $( document ).ready(function(){
 	
@@ -271,6 +281,8 @@ $( document ).ready(function(){
 //	urlParamObjs = $.parseParams(window.location);
 	urlParamObjs = $.parseParams(settings);
 	
+	overrideSettings();
+
 	console.log(urlParamObjs);
 
 	/* Check for all required parameters */
