@@ -82,7 +82,7 @@ function additionalSettings(){
 	/* camera2 */
 	settingsObj.sourceURL[1] = 
 		"http%3A%2F%2Fcamera2.com%2FA9999%2Flatest.jpg";
-	settingsObj.sourceRefreshSeconds[1] = 10;
+	settingsObj.sourceRefreshSeconds[1] = 60;
 }
 ```
 
