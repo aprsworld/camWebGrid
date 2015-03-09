@@ -1,9 +1,7 @@
-
 /*
 -> sourceURL
         required
         URL where we get our primary image from
-
 
 -> sourceMetaJSON
         can be null or undefined.
@@ -105,7 +103,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#wrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
+		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
 
 
 
@@ -189,8 +187,8 @@ function stale( index ){
 }
 
 function resize(){
-	$(".gridBox").css( "height", ((($(window).height()*.8)/2)+"px" ));
-	$(".gridBox").css( "width", ((($(window).width()*.8)/2)+"px" ));
+	$(".gridBox").css( "height", ((($(window).height()*.9)/2)+"px" ));
+	$(".gridBox").css( "width", ((($(window).width()*.9)/2)+"px" ));
 
 }
 
@@ -279,8 +277,8 @@ $( document ).ready(function(){
 
 	/* retrieve the parameters in the url and stores them into an object */
 //	urlParamObjs = $.parseParams(window.location);
-	urlParamObjs = $.parseParams(settings);
-	
+	//urlParamObjs = $.parseParams(settings);
+	urlParamObjs = settingsObj;
 	overrideSettings();
 
 	console.log(urlParamObjs);
@@ -294,7 +292,7 @@ $( document ).ready(function(){
 	} else {
 
 		console.log("cannot continue, missing sourceURL or sourceRefreshSeconds");
-		$("#wrapper").append("<h1>Error: Missing one or more required parameters: sourceURL or sourceRefreshSeconds</h1><br>");
+		$("#innerWrapper").append("<h1>Error: Missing one or more required parameters: sourceURL or sourceRefreshSeconds</h1><br>");
 		return;
 
 	}
@@ -303,7 +301,7 @@ $( document ).ready(function(){
 	if ( sourceURL.length != sourceRefreshSeconds.length ) {
 
 		console.log("cannot continue, sourceURL array is not the same size as sourceRefreshSeconds array");
-		$("#wrapper").append("<h1>Error: sourceURL array size is not equal to sourceRefreshSeconds array</h1><br>");
+		$("#innerWrapper").append("<h1>Error: sourceURL array size is not equal to sourceRefreshSeconds array</h1><br>");
 		return;
 
 	}
