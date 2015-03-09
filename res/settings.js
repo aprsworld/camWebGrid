@@ -24,7 +24,7 @@ var settingsObj = {
 
 	sourceStaleSeconds: [],
 
-	sourceOverlayTextTop: []
+	sourceOverlayTextTop: [undefined,null,undefined,undefined]
 
 }
 
@@ -37,7 +37,7 @@ function additionalSettings(){
 	settingsObj.sourceOverlayTextTop[1]="This one uses JSON";
 
 	settingsObj.sourceLinkToFullURL[1]="http%3A%2F%2Fcam.aprsworld.com%2Ffairbanks0%2Flatest.jpg";
-	settingsObj.sourceLinkToFullURLBehavior[1]="newTab";
+	settingsObj.sourceLinkToFullURLBehavior[1]="newWindow";
 
 }
 
@@ -51,7 +51,7 @@ var settingsObj = {
 	
 	sourceRefreshSeconds: [],
 
-	sourceLinkToFullUrl: [],
+	sourceLinkToFullURL: [],
 
 	sourceMetaJSON: [],
 
@@ -64,4 +64,11 @@ var settingsObj = {
 	sourceOverlayTextTop: []
 
 }
+
+function additionalSettings(){
+
+
+
+}
+
 */
