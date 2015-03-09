@@ -362,7 +362,16 @@ $( document ).ready(function(){
 
 	}
 
-	
+	/* make sure the two required parameters contain no undefineds */
+	for ( var i = 0 ; i < sourceURL.length ; i++ ) {	
+		if ( typeof sourceURL[i] == 'undefined' || typeof sourceRefreshSeconds[i] == 'undefined') {
+
+			console.log("cannot continue, sourceURL or sourceRefreshSeconds contain an undefined variable: "+i);
+			$("#innerWrapper").append("<h1>Error: sourceURL and/or sourceRefreshSeconds contain an undefined variable</h1><br>");
+			return;
+
+		}
+	}
 
 	/* retrieve all the parameters we can, otherwise leave them undefined */
 	if ( urlParamObjs.hasOwnProperty("sourceMetaJSON") ) {
