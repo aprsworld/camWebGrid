@@ -104,7 +104,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
+		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
 
 
 
@@ -191,7 +191,7 @@ function stripParam(url){
 function stale( index ){
 
 	console.log("stale at index: "+index);
-	$("#stale"+index).html("Stale: Updated "+ secToTime(cameraSeconds[index]) +" ago X");
+	$("#timer"+index).html("Stale: Updated "+ secToTime(cameraSeconds[index]) +" ago");
 	$("#stale"+index).show();
 	
 }
@@ -257,7 +257,9 @@ function timerTick(){
 
 			$("#timer"+i).html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
 
-		} 
+		} else {
+			$("#timer"+i).html("Updated " + secToTime( cameraSeconds[i] ) + " ago" );
+		}
 
 		/* if the second count equals sourceRefreshSeconds, update the image */
 		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] && cameraSeconds[i] % 10 == 0 ) {
@@ -278,8 +280,8 @@ function timerTick(){
 			}
 
 		}
-*/
 
+*/
 		/* check if stale */
 		$("#stale"+i).hide();
 		if ( typeof sourceStaleSeconds !== 'undefined' ) {

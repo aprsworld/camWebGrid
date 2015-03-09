@@ -24,7 +24,7 @@ var settingsObj = {
 
 	sourceStaleSeconds: [],
 
-	sourceOverlayTextTop: [undefined,null,undefined,undefined]
+	sourceOverlayTextTop: []
 
 }
 
@@ -34,10 +34,13 @@ function additionalSettings(){
 	console.log("additional settings");
 
 	settingsObj.sourceLinkToFullURL[1]="http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg";
-	settingsObj.sourceOverlayTextTop[1]="This one uses JSON";
+
 
 	settingsObj.sourceLinkToFullURL[1]="http%3A%2F%2Fcam.aprsworld.com%2Ffairbanks0%2Flatest.jpg";
 	settingsObj.sourceLinkToFullURLBehavior[1]="newWindow";
+
+	settingsObj.sourceOverlayTextTop[3]="This one uses JSON";
+	settingsObj.sourceMetaJSON[3]="http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=fairbanks0";
 
 }
 
