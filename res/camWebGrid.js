@@ -104,7 +104,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span><span class=\"gridimg\" id=\"gridimg"+i+"\">"+imageLink+"</span><span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
+		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
 
 
 
@@ -162,7 +162,8 @@ function updateCameraImg( index ) {
 
 		} else {
 			/* this is for urls using latest.jpg */
-			$("#cameraImage"+index).attr("src",$("#cameraImage"+index).attr("src")+"?"+ new Date().getTime());
+			var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
+			$("#cameraImage"+index).attr("src",urlImg);
 
 			/* cannot go stale without json, so just reset the timer to 0 */
 			cameraSeconds[index] = 0;
@@ -182,7 +183,7 @@ function updateCameraImg( index ) {
 /* get the url without parameters */
 function stripParam(url){
 
-	return url;
+	return url.split("?")[0];
 
 }
 
@@ -233,12 +234,13 @@ function resize(){
 	var cols = getCols(sourceURL.length);
 
 	/* set the width and height based on the the screen size, divided by the number of cols and rows (respectively) */
-	$(".gridBox").css( "width", ((($(window).width()*.85)/cols)+"px" ));
+	$(".gridBox").css( "width", ((($(window).width()*.9)/cols)+"px" ));
 	$(".gridBox").css( "height", ((($(window).height()*.85)/rows)+"px" ));
 	
 	/* the line height must be set as well so the images can be centered vertically */
 	$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
 
+	$("#innerWrapper").css( "width", $(window).width()*.95 );
 
 }
 
