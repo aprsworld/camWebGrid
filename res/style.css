@@ -28,12 +28,7 @@
 
 
 }
-/* this is for getting the image to vertically align */
-.helper {
-	display: inline-block;
-	width: 0px;
-	vertical-align: middle;
-}
+
 
 /* timer for the image */
 .gridBox .imageTimer{

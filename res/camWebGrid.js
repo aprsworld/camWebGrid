@@ -84,6 +84,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 			}
 		}	
 
+
 		/* if sourceLinkToFullURL is set, then we want to add a link to the image when pressed */
 		if ( typeof sourceLinkToFullURL === 'undefined' ) {
 			imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
@@ -103,7 +104,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
+		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">X</span><span class=\"gridimg\" id=\"gridimg"+i+"\">"+imageLink+"</span><span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
 
 
 
@@ -169,11 +170,19 @@ function updateCameraImg( index ) {
 
 	} else {
 		/* this is for urls using latest.jpg */
-		$("#cameraImage"+index).attr("src",$("#cameraImage"+index).attr("src")+"?"+ new Date().getTime());
+		var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
+		$("#cameraImage"+index).attr("src",urlImg);
 
 		/* cannot go stale without json, so just reset the timer to 0 */
 		cameraSeconds[index] = 0;
 	}
+
+}
+
+/* get the url without parameters */
+function stripParam(url){
+
+	return url;
 
 }
 
@@ -186,43 +195,50 @@ function stale( index ){
 	
 }
 
+/* based on the number of images, find the number of rows that will give the best fit */
 function getRows( count ){
 
 	var rows=1;
-
+	
+	/* if screen is wider than it is tall */
 	if ( $(window).width() > $(window).height() ) {
 		rows=Math.floor(Math.sqrt(count));
 	} else {
 		rows=Math.ceil(count/Math.floor(Math.sqrt(count)));
 	}
-	console.log("rows: "+ rows);
+
 	return rows;
 }
 
+/* based on the number of images, find the number of columns that will give the best fit */
 function getCols( count ){
 
 	var cols=1;
 
+	/* if screen is wider than it is tall */
 	if ( $(window).width() > $(window).height() ) {
 		cols=Math.ceil(count/Math.floor(Math.sqrt(count)));
 	} else {
 		cols=Math.floor(Math.sqrt(count));
 	}
-	console.log("cols: "+ cols);
+
 	return cols;
 }
 
+/* resize function called if the screen gets resized */
 function resize(){
 
-	console.log(sourceURL.length);
+	/* the the rows and cols for resize */
 	var rows = getRows(sourceURL.length);
 	var cols = getCols(sourceURL.length);
 
-	
-
+	/* set the width and height based on the the screen size, divided by the number of cols and rows (respectively) */
 	$(".gridBox").css( "width", ((($(window).width()*.85)/cols)+"px" ));
 	$(".gridBox").css( "height", ((($(window).height()*.85)/rows)+"px" ));
+	
+	/* the line height must be set as well so the images can be centered vertically */
 	$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
+
 
 }
 
@@ -312,7 +328,11 @@ $( document ).ready(function(){
 	/* retrieve the parameters in the url and stores them into an object */
 //	urlParamObjs = $.parseParams(window.location);
 	//urlParamObjs = $.parseParams(settings);
+
+	additionalSettings();
+
 	urlParamObjs = settingsObj;
+
 	overrideSettings();
 
 	console.log(urlParamObjs);

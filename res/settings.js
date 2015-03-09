@@ -1,4 +1,4 @@
-/* settings object for camWebGrid */
+/* settings object for camWebGrid. For parameters that need a specific index, use the additionalSettings function */
 var settingsObj = {
 
 	/* 
@@ -6,13 +6,13 @@ var settingsObj = {
 	If these two arrays are not the same size, the page will display a message indicating this. Make sure addresses are url encoded. This can also be
 	accomplished with encodeURIComponent("http://exampleURL.com");
 	*/
-	sourceURL: ["http%3A%2F%2Fcam.aprsworld.com%2FA3400%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4606%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4241%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA3400%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4606%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4241%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4606%2Flatest.jpg"],
+	sourceURL: ["http%3A%2F%2Fcam.aprsworld.com%2FA3400%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4606%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4241%2Flatest.jpg"],
 	
 	/* required, page will display a message if not set */
-	sourceRefreshSeconds: [10,60,10,10,10,60,10,10,10],
+	sourceRefreshSeconds: [10,60,10,10],
 
 	/* Make sure addresses are url encoded. This can also be accomplished with encodeURIComponent("http://exampleURL.com"); */
-	sourceLinkToFullUrl: [],
+	sourceLinkToFullURL: [],
 
 	/* Make sure addresses are url encoded. This can also be accomplished with encodeURIComponent("http://exampleURL.com"); */
 	sourceMetaJSON: [],
@@ -27,6 +27,17 @@ var settingsObj = {
 	sourceOverlayTextTop: []
 
 }
+
+/* to set a specific array index without setting others, add them out side of the object */
+function additionalSettings(){
+
+	console.log("additional settings");
+
+	settingsObj.sourceLinkToFullURL[1]="http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg";
+	settingsObj.sourceOverlayTextTop[1]="This one uses JSON";
+
+}
+
 
 /*
 blank settings object for reference
