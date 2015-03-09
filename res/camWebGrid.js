@@ -186,9 +186,43 @@ function stale( index ){
 	
 }
 
+function getRows( count ){
+
+	var rows=1;
+
+	if ( $(window).width() > $(window).height() ) {
+		rows=Math.floor(Math.sqrt(count));
+	} else {
+		rows=Math.ceil(count/Math.floor(Math.sqrt(count)));
+	}
+	console.log("rows: "+ rows);
+	return rows;
+}
+
+function getCols( count ){
+
+	var cols=1;
+
+	if ( $(window).width() > $(window).height() ) {
+		cols=Math.ceil(count/Math.floor(Math.sqrt(count)));
+	} else {
+		cols=Math.floor(Math.sqrt(count));
+	}
+	console.log("cols: "+ cols);
+	return cols;
+}
+
 function resize(){
-	$(".gridBox").css( "height", ((($(window).height()*.9)/2)+"px" ));
-	$(".gridBox").css( "width", ((($(window).width()*.9)/2)+"px" ));
+
+	console.log(sourceURL.length);
+	var rows = getRows(sourceURL.length);
+	var cols = getCols(sourceURL.length);
+
+	
+
+	$(".gridBox").css( "width", ((($(window).width()*.85)/cols)+"px" ));
+	$(".gridBox").css( "height", ((($(window).height()*.85)/rows)+"px" ));
+	$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
 
 }
 
