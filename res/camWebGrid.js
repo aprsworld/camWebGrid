@@ -52,7 +52,6 @@ var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var urlParamObjs;
 var cameraSeconds=[];
-var fullIndex=0;
 
 /* This function takes the sourceURL array and creates a grid based on it */
 function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
@@ -144,10 +143,7 @@ function getMetaJSON ( url, index ) {
 			if ( $("#cameraImage"+index).attr("src") != data.fileURL )		
 				$("#cameraImage"+index).attr("src",data.fileURL);
 
-			if ( index == fullIndex ) {
-				$("#cameraImageFull").attr("src",data.fileURL);
-			}
-
+			
 
 		} 
 	);
@@ -170,9 +166,7 @@ function updateCameraImg( index ) {
 			var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
 			$("#cameraImage"+index).attr("src",urlImg);
 			
-			if ( index == fullIndex ) {
-				$("#cameraImageFull").attr("src",urlImg);
-			}
+			
 
 			/* cannot go stale without json, so just reset the timer to 0 */
 			cameraSeconds[index] = 0;
@@ -182,10 +176,6 @@ function updateCameraImg( index ) {
 		/* this is for urls using latest.jpg */
 		var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
 		$("#cameraImage"+index).attr("src",urlImg);
-
-		if ( index == fullIndex ) {
-			$("#cameraImageFull").attr("src",urlImg);
-		}
 
 		/* cannot go stale without json, so just reset the timer to 0 */
 		cameraSeconds[index] = 0;
@@ -271,17 +261,10 @@ function timerTick(){
 
 			$("#timer"+i).html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
 
-			/* for fullscreen timer */
-			if (fullIndex == i) {
-				$("#timerFull").html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
-			}	
 
 		} else {
 			$("#timer"+i).html("Updated " + secToTime( cameraSeconds[i] ) + " ago" );
-			/* for full screen timer */			
-			if (fullIndex == i) {
-				$("#timerFull").html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
-			}
+		
 		}
 
 		/* if the second count equals sourceRefreshSeconds, update the image */
@@ -347,32 +330,30 @@ function overrideSettings(){
 
 }
 
+/* toggles fullscreen */
 function expand( gridBox ){
 
-	console.log("hello");
-
+	/* get the index from the button's id */
 	var index = gridBox.id.substr(7);
-	fullIndex = index;
-	if ($("#expButt"+index).html() == "+") {
 
+	/* Checks if we are going to fullscreen or returning from it */
+	if ($("#expButt"+index).html() == "+") {
+		/* iterate through the cams */
 		for ( var i = 0 ; i < sourceURL.length ; i++ ) {
-		
+			/* this is the one to full screen */
 			if ( i == index ) {
-				if ($("#expButt"+index).html() == "+") {
 					$("#gridBox"+index).css({"width": "100%","height": "100%","max-height": ($(window).height()*.9)+"px"});
 					$("#cameraImage"+index).css({"height": (($(window).height()*.9))+"px" });
 					$("#expButt"+index).html("-");
-				} else {
-					resize();
-					$("#expButt"+index).html("+");
-				}
 			} else {
+			/* hide the ones we do not want fullscreen */
 				$("#gridBox"+i).hide();
 				
 			}
 
 		}
 	} else {
+		/* returns screen to normal */
 		resize();
 		$(".gridBox").show();
 	}
@@ -386,14 +367,13 @@ $( document ).ready(function(){
 	
 	console.log("ready");
 
-	/* retrieve the parameters in the url and stores them into an object */
-//	urlParamObjs = $.parseParams(window.location);
-	//urlParamObjs = $.parseParams(settings);
-
+	/* adds additions settings to the settings object from settings.js */
 	additionalSettings();
 
+	/* gets settings from settings.js and saves it to local object */
 	urlParamObjs = settingsObj;
 
+	/* retrieve the parameters in the url and overwrite the ones in urlParamObjs */
 	overrideSettings();
 
 	console.log(urlParamObjs);
@@ -468,6 +448,8 @@ $( document ).ready(function(){
 		sourceOverlayTextTop = urlParamObjs.sourceOverlayTextTop;
 
 	}
+
+	/* this function fires off when the window is resized */
 	$(window).resize(function() {
 		resize();
 	});
@@ -486,6 +468,7 @@ $( document ).ready(function(){
 
 	});
 
+	/* Added this for mobile so the buttons will appear. */
 	$(".expandButton").show();
 
 });
