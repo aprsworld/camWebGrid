@@ -6,16 +6,16 @@ var settingsObj = {
 	If these two arrays are not the same size, the page will display a message indicating this. Make sure addresses are url encoded. This can also be
 	accomplished with encodeURIComponent("http://exampleURL.com");
 	*/
-	sourceURL: [encodeURIComponent("http://cam.aprsworld.com/A3400/latest.jpg"),"http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2FA4606%2Flatest.jpg","http%3A%2F%2Fcam.aprsworld.com%2Ffairbanks0%2Flatest.jpg"],
+	sourceURL: [encodeURIComponent("http://cam.aprsworld.com/A4241/latest.jpg"),encodeURIComponent("http://cam.aprsworld.com/A4235/latest.jpg"),encodeURIComponent("http://cam.aprsworld.com/A4236/latest.jpg"),encodeURIComponent("http://cam.aprsworld.com/A4606/latest.jpg")],
 	
 	/* required, page will display a message if not set */
-	sourceRefreshSeconds: [10,60,10,10*60],
+	sourceRefreshSeconds: [60,60,60,60],
 
 	/* Make sure addresses are url encoded. This can also be accomplished with encodeURIComponent("http://exampleURL.com"); */
-	sourceLinkToFullURL: [],
+	sourceLinkToFullURL: [("http://cam.aprsworld.com/A4241/latest.jpg"),("http://cam.aprsworld.com/A4235/latest.jpg"),("http://cam.aprsworld.com/A4236/latest.jpg"),("http://cam.aprsworld.com/A4606/latest.jpg")],
 
-	/* Make sure addresses are url encoded. This can also be accomplished with encodeURIComponent("http://exampleURL.com"); */
-	sourceMetaJSON: [],
+	/* These addresses are not required to be URL encoded */
+	sourceMetaJSON: ["http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=A4241","http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=A4235","http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=A4236","http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=A4606"],
 
 	sourceMetaRefreshSeconds: [],
 
@@ -31,16 +31,6 @@ var settingsObj = {
 /* to set a specific array index without setting others, add them out side of the object */
 function additionalSettings(){
 
-	console.log("additional settings");
-
-	settingsObj.sourceLinkToFullURL[1]="http%3A%2F%2Fcam.aprsworld.com%2FA4035%2Flatest.jpg";
-
-
-	settingsObj.sourceLinkToFullURL[1]="http%3A%2F%2Fcam.aprsworld.com%2Ffairbanks0%2Flatest.jpg";
-	settingsObj.sourceLinkToFullURLBehavior[1]="newWindow";
-
-	settingsObj.sourceOverlayTextTop[3]="This one uses JSON";
-	settingsObj.sourceMetaJSON[3]="http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=fairbanks0";
 
 }
 

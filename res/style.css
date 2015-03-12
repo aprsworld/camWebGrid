@@ -93,6 +93,67 @@
 	background-color: rgba(0, 0, 0, 0.75);
 	line-height: 20px;
 }
+.expandButton{
+
+	display: none;
+	font-size: 2em;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	padding: 10px 20px 10px 20px;
+	border-radius: 15px;
+	background-color: rgba(150,150,187, 0.55);
+	line-height: normal;
+
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+
+}
+.expandButton:hover{
+
+	background-color: rgba(150,150,187, 1);
+
+}
+
+.fullscreen{
+	
+	position: fixed;
+	width:100%;
+	height: 100%;
+	z-index: 200;
+
+	background-color: #a0a0a0;
+
+
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-linear-gradient(top left, #999999 0%, #5C5959 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top left, #999999 0%, #5C5959 100%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top left, #999999 0%, #5C5959 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #999999), color-stop(1, #5C5959));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top left, #999999 0%, #5C5959 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: linear-gradient(to bottom right, #999999 0%, #5C5959 100%);
+
+	margin: 2px;
+	
+	border-radius: 15px;
+	text-align: center;
+
+}
 
 
 

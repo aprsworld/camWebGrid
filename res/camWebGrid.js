@@ -52,6 +52,7 @@ var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var urlParamObjs;
 var cameraSeconds=[];
+var fullIndex=0;
 
 /* This function takes the sourceURL array and creates a grid based on it */
 function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
@@ -104,7 +105,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div>");
+		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\">+</div></div>");
 
 
 
@@ -143,6 +144,10 @@ function getMetaJSON ( url, index ) {
 			if ( $("#cameraImage"+index).attr("src") != data.fileURL )		
 				$("#cameraImage"+index).attr("src",data.fileURL);
 
+			if ( index == fullIndex ) {
+				$("#cameraImageFull").attr("src",data.fileURL);
+			}
+
 
 		} 
 	);
@@ -164,6 +169,10 @@ function updateCameraImg( index ) {
 			/* this is for urls using latest.jpg */
 			var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
 			$("#cameraImage"+index).attr("src",urlImg);
+			
+			if ( index == fullIndex ) {
+				$("#cameraImageFull").attr("src",urlImg);
+			}
 
 			/* cannot go stale without json, so just reset the timer to 0 */
 			cameraSeconds[index] = 0;
@@ -173,6 +182,10 @@ function updateCameraImg( index ) {
 		/* this is for urls using latest.jpg */
 		var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
 		$("#cameraImage"+index).attr("src",urlImg);
+
+		if ( index == fullIndex ) {
+			$("#cameraImageFull").attr("src",urlImg);
+		}
 
 		/* cannot go stale without json, so just reset the timer to 0 */
 		cameraSeconds[index] = 0;
@@ -241,6 +254,7 @@ function resize(){
 	$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
 
 	$("#innerWrapper").css( "width", $(window).width()*.95 );
+	$(".expandButton").html("+");
 
 }
 
@@ -257,13 +271,21 @@ function timerTick(){
 
 			$("#timer"+i).html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
 
+			/* for fullscreen timer */
+			if (fullIndex == i) {
+				$("#timerFull").html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
+			}	
+
 		} else {
 			$("#timer"+i).html("Updated " + secToTime( cameraSeconds[i] ) + " ago" );
+			/* for full screen timer */			
+			if (fullIndex == i) {
+				$("#timerFull").html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
+			}
 		}
 
 		/* if the second count equals sourceRefreshSeconds, update the image */
 		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] && cameraSeconds[i] % 10 == 0 ) {
-			
 			updateCameraImg(i);
 		}
 
@@ -280,8 +302,8 @@ function timerTick(){
 			}
 
 		}
+		*/
 
-*/
 		/* check if stale */
 		$("#stale"+i).hide();
 		if ( typeof sourceStaleSeconds !== 'undefined' ) {
@@ -324,6 +346,41 @@ function overrideSettings(){
 	}
 
 }
+
+function expand( gridBox ){
+
+	console.log("hello");
+
+	var index = gridBox.id.substr(7);
+	fullIndex = index;
+	if ($("#expButt"+index).html() == "+") {
+
+		for ( var i = 0 ; i < sourceURL.length ; i++ ) {
+		
+			if ( i == index ) {
+				if ($("#expButt"+index).html() == "+") {
+					$("#gridBox"+index).css({"width": "100%","height": "100%","max-height": ($(window).height()*.9)+"px"});
+					$("#cameraImage"+index).css({"height": (($(window).height()*.9))+"px" });
+					$("#expButt"+index).html("-");
+				} else {
+					resize();
+					$("#expButt"+index).html("+");
+				}
+			} else {
+				$("#gridBox"+i).hide();
+				
+			}
+
+		}
+	} else {
+		resize();
+		$(".gridBox").show();
+	}
+	
+
+}
+
+
 
 $( document ).ready(function(){
 	
@@ -414,8 +471,21 @@ $( document ).ready(function(){
 	$(window).resize(function() {
 		resize();
 	});
+
 	/* create the grid */
 	createCamBlocks(sourceURL,sourceRefreshSeconds);
-	
+
+	/* setting the hover activity to show and hide the expand button */
+	$(".gridBox").hover(function(){
+
+		$(".expandButton").show();
+
+	},function(){
+
+		$(".expandButton").hide();
+
+	});
+
+	$(".expandButton").show();
 
 });
