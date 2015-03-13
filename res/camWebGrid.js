@@ -87,12 +87,12 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 
 		/* if sourceLinkToFullURL is set, then we want to add a link to the image when pressed */
 		if ( typeof sourceLinkToFullURL === 'undefined' ) {
-			imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
+			imageLink = "<img class=\"cameraImage\" id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
 		} else {
 			if ( typeof sourceLinkToFullURL[i] === 'undefined' ) {
-				imageLink = "<img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
+				imageLink = "<img class=\"cameraImage\" id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\" >";
 			} else {
-				imageLink = "<a href=\""+sourceLinkToFullURL[i]+"\" "+newTab+" ><img id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\"  ></a>";				
+				imageLink = "<a href=\""+sourceLinkToFullURL[i]+"\" "+newTab+" ><img class=\"cameraImage\" id=\"cameraImage"+i+"\" src=\""+decodeURIComponent(sourceURL[i])+"\"  ></a>";				
 			}
 		}		
 		
@@ -104,7 +104,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\">+</div></div>");
+		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><img src=\"res/images/fullscreen.png\"></div></div>");
 
 
 
@@ -244,7 +244,7 @@ function resize(){
 	$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
 
 	$("#innerWrapper").css( "width", $(window).width()*.95 );
-	$(".expandButton").html("+");
+	$(".expandButton").html("<img src=\"res/images/fullscreen.png\">");
 
 }
 
@@ -337,14 +337,14 @@ function expand( gridBox ){
 	var index = gridBox.id.substr(7);
 
 	/* Checks if we are going to fullscreen or returning from it */
-	if ($("#expButt"+index).html() == "+") {
+	if ($("#expButt"+index).html() == "<img src=\"res/images/fullscreen.png\">") {
 		/* iterate through the cams */
 		for ( var i = 0 ; i < sourceURL.length ; i++ ) {
 			/* this is the one to full screen */
 			if ( i == index ) {
 					$("#gridBox"+index).css({"width": "100%","height": "100%","max-height": ($(window).height()*.9)+"px"});
 					$("#cameraImage"+index).css({"height": (($(window).height()*.9))+"px" });
-					$("#expButt"+index).html("-");
+					$("#expButt"+index).html("<img src=\"res/images/contract.png\">");
 			} else {
 			/* hide the ones we do not want fullscreen */
 				$("#gridBox"+i).hide();
