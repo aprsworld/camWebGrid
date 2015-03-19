@@ -53,6 +53,8 @@ var sourceOverlayTextTop;
 var sourceEXIF;
 var sourceEXIFLabel;
 
+var fullscreen=false;
+
 var urlParamObjs;
 
 var cameraSeconds=[];
@@ -338,20 +340,25 @@ function getCols( count ){
 
 /* resize function called if the screen gets resized */
 function resize(){
+	if ( !fullscreen ) {
+		/* the the rows and cols for resize */
+		var rows = getRows(sourceURL.length);
+		var cols = getCols(sourceURL.length);
 
-	/* the the rows and cols for resize */
-	var rows = getRows(sourceURL.length);
-	var cols = getCols(sourceURL.length);
-
-	/* set the width and height based on the the screen size, divided by the number of cols and rows (respectively) */
-	$(".gridBox").css( "width", ((($(window).width()*.9)/cols)+"px" ));
-	$(".gridBox").css( "height", ((($(window).height()*.85)/rows)+"px" ));
+		/* set the width and height based on the the screen size, divided by the number of cols and rows (respectively) */
+		$(".gridBox").css( "width", ((($(window).width()*.9)/cols)+"px" ));
+		$(".gridBox").css( "height", ((($(window).height()*.85)/rows)+"px" ));
 	
-	/* the line height must be set as well so the images can be centered vertically */
-	$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
+		/* the line height must be set as well so the images can be centered vertically */
+		$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
 
-	$("#innerWrapper").css( "width", $(window).width()*.95 );
-	$(".expandButton").html("<img src=\"res/images/fullscreen.png\">");
+		$("#innerWrapper").css( "width", $(window).width()*.95 );
+		$(".expandButton").html("<img src=\"res/images/fullscreen.png\">");
+	} else {
+	
+		
+
+	}
 
 }
 
@@ -446,6 +453,11 @@ function expand( gridBox ){
 
 	/* Checks if we are going to fullscreen or returning from it */
 	if ($("#expButt"+index).html() == "<img src=\"res/images/fullscreen.png\">") {
+
+		/* set fullscreen to true */		
+		fullscreen = true;		
+
+
 		/* iterate through the cams */
 		for ( var i = 0 ; i < sourceURL.length ; i++ ) {
 			/* this is the one to full screen */
@@ -462,8 +474,13 @@ function expand( gridBox ){
 		}
 	} else {
 		/* returns screen to normal */
+		fullscreen = false;
+
 		resize();
+		$("#cameraImage"+index).css({"height": "" });
 		$(".gridBox").show();
+
+		
 	}
 	
 
