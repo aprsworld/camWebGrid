@@ -144,7 +144,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 
 		}
 
-		
+		$("#cameraImage"+i).load(function(){ console.log("loaded image: "+this.id); updateEXIF(this.id.substr(-1)); });
 		
 		/* Now that the image exisits, we can set the load function */
 		if ( typeof sourceEXIF !== 'undefined' ) {
@@ -354,6 +354,30 @@ function resize(){
 
 		$("#innerWrapper").css( "width", $(window).width()*.95 );
 		$(".expandButton").html("<img src=\"res/images/fullscreen.png\">");
+
+		if ( $(".gridBox").width()/$(".gridBox").height() < 1 ) {
+			console.log("tall");
+			$(".cameraImage").css( "width", "100%" );
+			$(".cameraImage").css( "height", "" );
+		} else {
+			console.log("wide");
+			$(".cameraImage").css( "width", "" );
+			$(".cameraImage").css( "height", "100%" );
+		}
+
+		for( var i = 0 ; i < sourceURL.length ; i++ ){
+			if ( $("#cameraImage"+i).width() != 0 ) {
+				if ( $("#cameraImage"+i).width()<$(".gridBox").width() ){
+					console.log("good");
+				} else {
+					console.log("squish");
+					$("#cameraImage"+i).css( "height", "" );
+					$("#cameraImage"+i).css( "width", "100%" );
+		
+				}
+			}
+		}
+
 	} else {
 	
 		
@@ -477,7 +501,7 @@ function expand( gridBox ){
 		fullscreen = false;
 
 		resize();
-		$("#cameraImage"+index).css({"height": "" });
+		//$("#cameraImage"+index).css({"height": "" });
 		$(".gridBox").show();
 
 		
