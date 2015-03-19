@@ -50,8 +50,19 @@ var sourceLinkToFullURLBehavior;
 var sourceRefreshSeconds;
 var sourceStaleSeconds;
 var sourceOverlayTextTop;
+var sourceEXIF;
+var sourceEXIFLabel;
+
 var urlParamObjs;
+
 var cameraSeconds=[];
+
+function exifTest(index){
+
+	EXIF.getData(document.getElementById("cameraImage"+index),function(){alert(EXIF.pretty(this))});
+
+}
+
 
 /* This function takes the sourceURL array and creates a grid based on it */
 function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
@@ -103,8 +114,20 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 			if ( typeof sourceOverlayTextTop[i] !== 'undefined' ) overlay = "<span class=\"imageOverlay\">"+sourceOverlayTextTop[i]+"</span>";
 		}
 
+		var EXIFOverlay = "";
+
+		/* If we have an overlay set, put it at the top of the image */
+		if ( typeof sourceEXIF !== 'undefined' ) {
+			if ( typeof sourceEXIF[i] !== 'undefined' ) {
+				
+				if ( typeof sourceEXIFLabel[i] == 'undefined' ) sourceEXIFLabel[i] = sourceEXIF[i];
+				EXIFOverlay = "<span id=\"exif"+i+"\" class=\"imageOverlay\">Loading "+sourceEXIFLabel[i]+"</span>";
+				$("#cameraImage"+i).load(function(){ console.log("loaded image: "+this.id); updateEXIF(this.id.substr(-1)); });
+			}
+		}
+
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><img src=\"res/images/fullscreen.png\"></div></div>");
+		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+EXIFOverlay+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><img src=\"res/images/fullscreen.png\"></div></div>");
 
 
 
@@ -114,14 +137,20 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		/* get the seconds from JSON and update the ui */
 		if ( typeof sourceMetaJSON !== 'undefined' ) {
 			if ( typeof sourceMetaJSON[i] !== 'undefined' ) {
-				console.log("json on index: "+i);
 				getMetaJSON( sourceMetaJSON[i], i );
-				console.log(cameraSeconds[i]);
-
 			}
 
 		}
+
 		
+		
+		/* Now that the image exisits, we can set the load function */
+		if ( typeof sourceEXIF !== 'undefined' ) {
+			if ( typeof sourceEXIF[i] !== 'undefined' ) {
+				console.log("starting exif "+i); 
+				$("#cameraImage"+i).load(function(){ console.log("loaded image: "+this.id); updateEXIF(this.id.substr(-1)); });
+			}
+		}
 
 	}
 	resize();
@@ -130,6 +159,8 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 	timerTick();
 
 }
+
+
 
 /* updates the UI for json cameras. Also returns age in seconds */
 
@@ -181,6 +212,83 @@ function updateCameraImg( index ) {
 		cameraSeconds[index] = 0;
 	}
 
+	/* check if sourceEXIF is set for this index */
+	if ( typeof sourceEXIF !== 'undefined' ) {
+
+		if ( typeof sourceEXIF[index] !== 'undefined' ) {
+			//updateEXIF(index);
+			//$("#cameraImage"+index).load(function(){ console.log( "loaded image: " + this.id ); updateEXIF( this.id.substr(11) ); });
+
+		}
+	}
+
+}
+
+
+
+/* update exif data */
+function updateEXIF(index){
+
+	console.log("update exif: "+index);
+
+	/* get picture element to update */
+	var elem = document.getElementById("cameraImage"+index);
+
+	/* clear the exifdata. if you don't do this it won't actually update the exif data. that was a joy to figure out. */
+	elem.exifdata=null;
+
+	
+
+	/* This function shouldn't be called until the image is loaded, but incase timing is thrown off or something weird happens, we'll check anyway */	
+	if ( elem.complete ) {
+		/* get new exif data */
+		EXIF.getData(elem,function(){
+			/* image's exif data is updated at this point, now find the specific tag */
+			var tagValue=EXIF.getTag(elem,sourceEXIF[index])
+
+			/* make sure the tagValue is defined */
+			if ( typeof tagValue !== 'undefined' ) {
+				if ( typeof tagValue == 'string' ) {
+				/* if string, we can just plop the value onto the page */
+
+					$("#exif"+index).html(sourceEXIFLabel[index]+": "+tagValue);
+
+				} else {
+				/* If not a string, then it's an object or array.  */
+					
+					/* convert the ascii array into a string. */
+
+					
+
+					$("#exif"+index).html(sourceEXIFLabel[index]+": "+asciiToString(tagValue));
+
+					
+				}
+
+			} else {
+				/* if undefined, display no data available */
+				$("#exif"+index).html(sourceEXIFLabel[index]+": No Data Available");
+				//updateEXIF(index);
+			}
+		}); 
+
+		
+	}
+}
+
+/* exif.js will return ascii as an array instead of a string. There maybe a better way to do this, but this wroks for now */
+function asciiToString( value ){
+
+	var valueSTR = "";
+	/* we start at 5 because the first five are ASCII */
+	for (var i = 5 ; i < value.length ; i++){
+		if (value[i]!=0)
+			valueSTR += String.fromCharCode(value[i]);
+		//console.log("#: "+ value[i] +" char: "+String.fromCharCode(value[i]));
+	}
+
+	return valueSTR
+
 }
 
 /* get the url without parameters */
@@ -193,7 +301,6 @@ function stripParam(url){
 /* if an image is stale */
 function stale( index ){
 
-	console.log("stale at index: "+index);
 	$("#timer"+index).html("Stale: Updated "+ secToTime(cameraSeconds[index]) +" ago");
 	$("#stale"+index).show();
 	
@@ -251,49 +358,56 @@ function resize(){
 /* main timer */
 function timerTick(){
 
+	setInterval(function(){
+		/* iterate through camera seconds and increment the second count */
+		for (var i = 0 ; i < cameraSeconds.length ; i++ ) {
 
-	/* iterate through camera seconds and increment the second count */
-	for (var i = 0 ; i < cameraSeconds.length ; i++ ) {
-
-		cameraSeconds[i]++;
+			cameraSeconds[i]++;
 		
-		if ( sourceRefreshSeconds[i] - cameraSeconds[i] >= 0 ) {
+			if ( sourceRefreshSeconds[i] - cameraSeconds[i] >= 0 ) {
 
-			$("#timer"+i).html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
+				$("#timer"+i).html("Update in " + secToTime( sourceRefreshSeconds[i] - cameraSeconds[i] ) );
 
 
-		} else {
-			$("#timer"+i).html("Updated " + secToTime( cameraSeconds[i] ) + " ago" );
+			} else {
+				$("#timer"+i).html("Updated " + secToTime( cameraSeconds[i] ) + " ago" );
 		
-		}
+			}
 
-		/* if the second count equals sourceRefreshSeconds, update the image */
-		if ( cameraSeconds[i] >= sourceRefreshSeconds[i] && cameraSeconds[i] % 10 == 0 ) {
-			updateCameraImg(i);
-		}
+			/* if the second count equals sourceRefreshSeconds, update the image */
+			if ( cameraSeconds[i] >= sourceRefreshSeconds[i] && cameraSeconds[i] % 10 == 0 ) {
+				updateCameraImg(i);
+			}
+		
 
 
-		/* check if we should query for metaData 
-		if ( typeof sourceMetaRefreshSeconds !== 'undefined' ) {
+			/* check if we should query for metaData 
+			if ( typeof sourceMetaRefreshSeconds !== 'undefined' ) {
 
-			if ( typeof sourceMetaRefreshSeconds[i] !== 'undefined' ) {
+				if ( typeof sourceMetaRefreshSeconds[i] !== 'undefined' ) {
 
-				if ( sourceMetaRefreshSeconds[i] ) {
+					if ( sourceMetaRefreshSeconds[i] ) {
+
+					}
 
 				}
 
 			}
+			*/
 
-		}
-		*/
+			/* check if stale */
+			$("#stale"+i).hide();
+			if ( typeof sourceStaleSeconds !== 'undefined' ) {
 
-		/* check if stale */
-		$("#stale"+i).hide();
-		if ( typeof sourceStaleSeconds !== 'undefined' ) {
+				if ( typeof sourceStaleSeconds[i] !== 'undefined' ) {
 
-			if ( typeof sourceStaleSeconds[i] !== 'undefined' ) {
+					if ( cameraSeconds[i] >= sourceStaleSeconds[i] ) {
 
-				if ( cameraSeconds[i] >= sourceStaleSeconds[i] ) {
+						stale(i);
+
+					}
+
+				} else if ( cameraSeconds[i] >= ( sourceRefreshSeconds[i] * 2 + 5 ) ) {
 
 					stale(i);
 
@@ -305,17 +419,11 @@ function timerTick(){
 
 			}
 
-		} else if ( cameraSeconds[i] >= ( sourceRefreshSeconds[i] * 2 + 5 ) ) {
-
-			stale(i);
-
-		}
-
 		
-	}
-
+		}
+	}, 1000);
 	/* call function again in 1 second */
-	setTimeout( timerTick, 1000 );
+	//setTimeout( timerTick, 1000 );
 
 }
 
@@ -365,7 +473,6 @@ function expand( gridBox ){
 
 $( document ).ready(function(){
 	
-	console.log("ready");
 
 	/* adds additions settings to the settings object from settings.js */
 	additionalSettings();
@@ -376,7 +483,6 @@ $( document ).ready(function(){
 	/* retrieve the parameters in the url and overwrite the ones in urlParamObjs */
 	overrideSettings();
 
-	console.log(urlParamObjs);
 
 	/* Check for all required parameters */
 	if ( urlParamObjs.hasOwnProperty("sourceURL") && urlParamObjs.hasOwnProperty("sourceRefreshSeconds") ) {
@@ -448,6 +554,19 @@ $( document ).ready(function(){
 		sourceOverlayTextTop = urlParamObjs.sourceOverlayTextTop;
 
 	}
+
+	if ( urlParamObjs.hasOwnProperty("sourceEXIF") ) {
+
+		sourceEXIF = urlParamObjs.sourceEXIF;
+
+	}
+
+	if ( urlParamObjs.hasOwnProperty("sourceEXIFLabel") ) {
+
+		sourceEXIFLabel = urlParamObjs.sourceEXIFLabel;
+
+	}
+
 
 	/* this function fires off when the window is resized */
 	$(window).resize(function() {
