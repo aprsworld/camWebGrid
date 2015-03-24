@@ -55,6 +55,7 @@ function getJSArray($id){
 	return rtrim($out,",");
 }
 
+/* gets array with encoded URLS */
 function getURLJSArray ($id) {
 
 	$out = "";
@@ -81,7 +82,7 @@ var settingsObj = {
 	
 	sourceRefreshSeconds: [<? echo getJSArray("sourceRefreshSeconds"); ?>],
 
-	sourceLinkToFullURL: [<? echo getURLJSArray("sourceLinkToFullURL"); ?>],
+	sourceLinkToFullURL: [<? echo getJSArray("sourceLinkToFullURL"); ?>],
 
 	sourceMetaJSON: [<? echo getJSArray("sourceMetaJSON"); ?>],
 
