@@ -14,7 +14,7 @@
 	<body>
 		<div id="wrapper">
 			<div id="innerWrapper">
-				<form>
+				<form id="form" method="post" action="settingsDownload.php" >
 					<table>
 						<tr>
 							<th>sourceURL <span class="required">required</span></th>
@@ -79,7 +79,9 @@
 					</table>
 
 				</form>
-				<button type='button' onclick="addAll()">+</button>
+				<button type='button' onclick="addAll()">+</button><br>
+				<button onclick="submitForm()">Submit</button>
+				
 			</div>
 		</div>
 		
