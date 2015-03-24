@@ -148,6 +148,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		
 		/* Now that the image exisits, we can set the load function */
 		if ( typeof sourceEXIF !== 'undefined' ) {
+			console.log(typeof sourceEXIF[i] !== 'undefined');
 			if ( typeof sourceEXIF[i] !== 'undefined' ) {
 				console.log("starting exif "+i); 
 				$("#cameraImage"+i).load(function(){ console.log("loaded image: "+this.id); updateEXIF(this.id.substr(-1)); });
@@ -230,51 +231,55 @@ function updateCameraImg( index ) {
 
 /* update exif data */
 function updateEXIF(index){
+	if ( typeof sourceEXIF !== 'undefined' ) {
 
-	console.log("update exif: "+index);
+		if ( typeof sourceEXIF[index] !== 'undefined' ) {
+			console.log("update exif: "+index);
 
-	/* get picture element to update */
-	var elem = document.getElementById("cameraImage"+index);
+			/* get picture element to update */
+			var elem = document.getElementById("cameraImage"+index);
 
-	/* clear the exifdata. if you don't do this it won't actually update the exif data. that was a joy to figure out. */
-	elem.exifdata=null;
+			/* clear the exifdata. if you don't do this it won't actually update the exif data. that was a joy to figure out. */
+			elem.exifdata=null;
 
 	
 
-	/* This function shouldn't be called until the image is loaded, but incase timing is thrown off or something weird happens, we'll check anyway */	
-	if ( elem.complete ) {
-		/* get new exif data */
-		EXIF.getData(elem,function(){
-			/* image's exif data is updated at this point, now find the specific tag */
-			var tagValue=EXIF.getTag(elem,sourceEXIF[index])
+			/* This function shouldn't be called until the image is loaded, but incase timing is thrown off or something weird happens, we'll check anyway */	
+			if ( elem.complete ) {
+				/* get new exif data */
+				EXIF.getData(elem,function(){
+					/* image's exif data is updated at this point, now find the specific tag */
+					var tagValue=EXIF.getTag(elem,sourceEXIF[index])
 
-			/* make sure the tagValue is defined */
-			if ( typeof tagValue !== 'undefined' ) {
-				if ( typeof tagValue == 'string' ) {
-				/* if string, we can just plop the value onto the page */
+					/* make sure the tagValue is defined */
+					if ( typeof tagValue !== 'undefined' ) {
+						if ( typeof tagValue == 'string' ) {
+						/* if string, we can just plop the value onto the page */
 
-					$("#exif"+index).html(sourceEXIFLabel[index]+": "+tagValue);
+							$("#exif"+index).html(sourceEXIFLabel[index]+": "+tagValue);
 
-				} else {
-				/* If not a string, then it's an object or array.  */
+						} else {
+						/* If not a string, then it's an object or array.  */
 					
-					/* convert the ascii array into a string. */
-
-					
-
-					$("#exif"+index).html(sourceEXIFLabel[index]+": "+asciiToString(tagValue));
+							/* convert the ascii array into a string. */
 
 					
-				}
 
-			} else {
-				/* if undefined, display no data available */
-				$("#exif"+index).html(sourceEXIFLabel[index]+": No Data Available");
-				//updateEXIF(index);
-			}
-		}); 
+							$("#exif"+index).html(sourceEXIFLabel[index]+": "+asciiToString(tagValue));
+
+					
+						}
+
+					} else {
+						/* if undefined, display no data available */
+						$("#exif"+index).html(sourceEXIFLabel[index]+": No Data Available");
+						//updateEXIF(index);
+					}
+				}); 
 
 		
+			}
+		}
 	}
 }
 

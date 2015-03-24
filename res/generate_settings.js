@@ -60,6 +60,7 @@ function submitForm(){
 
 	/* check array lengths to be sure they are equal */
 	if ( URLAr.length == refSecAr.length && 0 != URLAr.length ) {
+		alert("Please note:\nIt will more than likely be necessary for you to need to change the permissions on this file before you can use it. Be sure to set \"Others Access\" to \"Read-only\"");
 		$("#form").submit();
 	} else {
 		alert("All required parameters must be set");
