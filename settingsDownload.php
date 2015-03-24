@@ -13,7 +13,7 @@ if ( checkRequired() ) {
 
 } else {
 	
-	die("<html><head></head><body><h1>HEY! You gotta have those required ones, man!</h1></body></html>");
+	die("<html><head></head><body><h1>Please make sure the required parameters are filled out.</h1><h3><a href=\"generate_settings.html\">Back</a></h3></body></html>");
 
 }
 
@@ -48,7 +48,7 @@ function getJSArray($id){
 			if ( null != $_POST[$id][$i] ) {
 				$out.=sprintf("\"%s\",",$_POST[$id][$i]);
 			} else {
-				$out.=sprintf("null,");
+				$out.=sprintf("undefined,");
 			}
 		}
 	}
