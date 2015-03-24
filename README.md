@@ -12,6 +12,8 @@ settings.js
  * `sourceLinkToFullURLBehavior`: Not required. This is used to decide how the `sourceLinkToFullURL` is opened. There are two options: `newTab`, `newWindow`. If this is not set, or anything else is put there, it will go with the default behavior of opening it in the same window. Please note: there is no true cross browser way to decide between opening a new tab or window due to browsers wanting to leave this option to the users. The method used in camWebGrid will work in the current versions of FireFox, Chrome, and Internet Explorer
  * `sourceStaleSeconds`: Not required. This is used to determine if a camera has taken longer than expected to refresh. If not set, then there will be no indication that it has taken too long.
  * `sourceOverlayTextTop`: Not required. If set, this will overlay a message at the top of the image. If not set, not message will be displayed.
+ * `sourceEXIF`: Not required. If set, this will overlay a message at the top of the image. The message will contain the EXIF value of the tag from the image. This will more than likely be set to `UserComment` if it is set at all. For this to work, the image _MUST_ be from the same domain as the webhost for the website.
+ * `sourceEXIFLabel`: Not required. This will replace the tag in the EXIF message with whatever is specified in this field.
 
 The settings are saved as arrays, with each index representing a camera. For example, if a camera has its `sourceURL`  saved at index 0, then the every other setting for the camera will be set to index 0 of all the other arrays. Let's say you want to set overlay text for the camera at index 1 but not at index 0. There are two ways to accomplish this. The first way is to set up your array like this:
 
@@ -102,4 +104,8 @@ not like this:
 
 This will cause the page to display a message because the whole `sourceRefreshSeconds` array has been overwritten.
 
+
+generate_settings.html
+---
+You can use this page to generate a settings.js page. Instructions for its use can be found on the page itself.
 

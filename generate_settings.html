@@ -17,61 +17,56 @@
 				<form id="form" method="post" action="settingsDownload.php" >
 					<table>
 						<tr>
-							<th>sourceURL <span class="required">required</span></th>
+							<th>sourceURL <span class="required">required</span></th><td class="example" > http://cam.aprsworld.com/A4241/latest.jpg</td>
 							<td id="sourceURL">
 								<input type="text" name="sourceURL[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceRefreshSeconds <span class="required">required</span></th>
+							<th>sourceRefreshSeconds <span class="required">required</span></th><td class="example" > 60</td>
 							<td id="sourceRefreshSeconds">
 								<input type="text" name="sourceRefreshSeconds[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceLinkToFullURL</th>
+							<th>sourceLinkToFullURL</th><td class="example" > http://cam.aprsworld.com/A4241/latest.jpg</td>
 							<td id="sourceLinkToFullURL">
 								<input type="text" name="sourceLinkToFullURL[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceMetaJSON</th>
+							<th>sourceMetaJSON</th><td class="example" > http://ian.aprsworld.com/camera/singleJSONcam.php?station_id=A4241</td>
 							<td id="sourceMetaJSON">
 								<input type="text" name="sourceMetaJSON[]" value="" />
 							</td>
 						</tr>
+
 						<tr>
-							<th>sourceMetaRefreshSeconds</th>
-							<td id="sourceMetaRefreshSeconds">
-								<input type="text" name="sourceMetaRefreshSeconds[]" value="" />
-							</td>
-						</tr>
-						<tr>
-							<th>sourceLinkToFullURLBehavior</th>
+							<th>sourceLinkToFullURLBehavior</th><td class="example" > newTab</td>
 							<td id="sourceLinkToFullURLBehavior">
 								<input type="text" name="sourceLinkToFullURLBehavior[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceStaleSeconds</th>
+							<th>sourceStaleSeconds</th><td class="example" > 120</td>
 							<td id="sourceStaleSeconds">
 								<input type="text" name="sourceStaleSeconds[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceOverlayTextTop</th>
+							<th>sourceOverlayTextTop</th><td class="example" > Message for image</td>
 							<td id="sourceOverlayTextTop">
 								<input type="text" name="sourceOverlayTextTop[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceEXIF</th>
+							<th>sourceEXIF</th><td class="example" > UserComment</td>
 							<td id="sourceEXIF">
 								<input type="text" name="sourceEXIF[]" value="" />
 							</td>
 						</tr>
 						<tr>
-							<th>sourceEXIFLabel</th>
+							<th>sourceEXIFLabel</th><td class="example" > Temperature</td>
 							<td id="sourceEXIFLabel">
 								<input type="text" name="sourceEXIFLabel[]" value="" />
 							</td>
@@ -82,6 +77,51 @@
 				<button type='button' onclick="addAll()">add camera +</button><br>
 				<button onclick="submitForm()">Submit</button>
 				
+			</div>
+			<div id="info">
+				<h4>Instructions:</h4>
+				<p>To generate a settings.js page, simply fill out the form above. sourceURL and sourceRefreshSeconds are the only two fields that are required. All other should be left blank unless they are going to be used. If you would like to have more than one camera displayed, press the "add camera +" button and another column of text boxes will be added. Once you have filled out everything you want to include in the settings.js page, click the "Submit" button and the page will download to your computer. Be sure to change the permissions on the file before trying to use it. Other's Access needs to be changed to Read-only, otherwise you will get a 403 response.</p>
+
+
+				<h4>README exerpt:</h4>
+				<table>
+					<tr>
+						<th>sourceURL</th>
+						<td>REQUIRED! This is the source URL of the webcam. This array MUST be the same size as `sourceRefreshSeconds` as they are both required.</td>
+					</tr>
+					<tr>
+						<th>sourceRefreshSeconds</th>
+						<td>REQUIRED! This is the interval, in seconds, the webpage checks for a new image. This array MUST be the same size as `sourceURL` as they are both required.</td>
+					</tr>
+					<tr>
+						<th>sourceLinkToFullURL</th>
+						<td>Not required. This is the url clicking on the image will take you to. If it is not set, the image will not have a link attached to it.</td>
+					</tr>
+					<tr>
+						<th>sourceMetaJSON</th>
+						<td>Not required. This is the URL for the JSON page for the image. The json page will contain meta data on the image, including the age, which will be used to update the timer for the given image so it can update closer to the time the server updates. If there is no URL, the image will refresh at the interval given by `sourceRefreshSeconds`</td>
+					</tr>
+					<tr>
+						<th>sourceLinkToFullURLBehavior</th>
+						<td>Not required. This is used to decide how the `sourceLinkToFullURL` is opened. There are two options: `newTab`, `newWindow`. If this is not set, or anything else is put there, it will go with the default behavior of opening it in the same window. Please note: there is no true cross browser way to decide between opening a new tab or window due to browsers wanting to leave this option to the users. The method used in camWebGrid will work in the current versions of FireFox, Chrome, and Internet Explorer</td>
+					</tr>
+					<tr>
+						<th>sourceStaleSeconds</th>
+						<td>Not required. This is used to determine if a camera has taken longer than expected to refresh. If not set, then there will be no indication that it has taken too long.</td>
+					</tr>
+					<tr>
+						<th>sourceOverlayTextTop</th>
+						<td>Not required. If set, this will overlay a message at the top of the image. If not set, not message will be displayed.</td>
+					</tr>
+					<tr>
+						<th>sourceEXIF</th>
+						<td>Not required. If set, this will overlay a message at the top of the image. The message will contain the EXIF value of the tag from the image. This will more than likely be set to `UserComment` if it is set at all. For this to work, the image _MUST_ be from the same domain as the webhost for the website.</td>
+					</tr>
+					<tr>
+						<th>sourceEXIFLabel</th>
+						<td>Not required. This will replace the tag in the EXIF message with whatever is specified in this field.</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 		

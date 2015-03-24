@@ -463,6 +463,7 @@ function timerTick(){
 
 }
 
+/* use url parameters to override settings */
 function overrideSettings(){
 	var urlParamObjsOver = $.parseParams(window.location);
 
