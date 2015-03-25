@@ -164,7 +164,17 @@
 	font-size: .7em;
 }
 
-#info{
+#info table{
 
+	border-collapse: collapse;
 
 }
+
+#info th, #info td{
+
+	border: solid 1px gray;
+	padding: 5px;
+
+}
+
+
