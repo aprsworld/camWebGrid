@@ -168,8 +168,23 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 /* updates the UI for json cameras. Also returns age in seconds */
 
 function getMetaJSON ( url, index ) {
+
+	var timeStamp = new Date().getTime();
+
+	/* JSON url may or may not already have parameters tacked onto the end. This check is made to ensure that we aren't messing with those parameters
+	   when we add the timeStamp to the end. */
+	if ( url.indexOf("?") != -1 ) {
+
+		timeStamp = "&"+timeStamp;
+		console.log("Already has parameters");
+
+	} else {
+
+		timeStamp = "?"+timeStamp;
+		console.log("Has no parameters");
+	}
 	
-	$.getJSON(url,
+	$.getJSON(url+timeStamp,
 		function (data) {
 			
 			cameraSeconds[index] = data.ageSeconds;
