@@ -394,15 +394,15 @@ function resize(){
 		var rows = getRows(sourceURL.length);
 		var cols = getCols(sourceURL.length);
 
-		$("#wrapper").css( "width", ((($(window).width()))+"px" ));
-		$("#wrapper").css( "height", (fillHeight()+"px" ));
+		$("#innerWrapper").css( "width", ((($(window).width()))+"px" ));
+		$("#innerWrapper").css( "height", (fillHeight()+"px" ));
 
 		/* set the width and height based on the the screen size, divided by the number of cols and rows (respectively) */
-		$(".gridBox").css( "width", ((($("#wrapper").width()*.9)/cols)+"px" ));
-		$(".gridBox").css( "height", ((($("#wrapper").height()*.85)/rows)+"px" ));
+		$(".gridBox").css( "width", ((($("#innerWrapper").width()*.9)/cols)+"px" ));
+		$(".gridBox").css( "height", ((($("#innerWrapper").height()*.85)/rows)+"px" ));
 	
 		/* the line height must be set as well so the images can be centered vertically */
-		$(".gridBox").css( "line-height", ((($("#wrapper").height()*.85)/rows)+"px" ));
+		$(".gridBox").css( "line-height", ((($("#innerWrapper").height()*.85)/rows)+"px" ));
 
 		$("#innerWrapper").css( "width", $(window).width()*.95 );
 		$(".expandButton").html("<div title=\"Fullscreen\" class=\"imageFullscreenExpand\"></div>");
@@ -443,7 +443,7 @@ function fillHeight(){
 
 	console.log("documentHeight= "+$(document).height());
 	console.log("viewportHeight= "+$(window).height());
-	console.log("camsHeight= "+$("#wrapper").height());
+	console.log("camsHeight= "+$("#innerWrapper").height());
 
 	return ($(window).height());
 
