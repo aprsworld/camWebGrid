@@ -115,7 +115,21 @@ Notes:
 
 ###Embedding into another page
 
-To embed the webcams into another page, the page will need to have jquery loaded. Add this tag: `<script type="text/javascript" src="/camWebGrid/res/includeJS.js"></script>` as well as `<div id="innerWrapper"></div><div style="clear: both;" ></div>` where ever you want the webcams to be. As the project is now, the webcams will still try to size themselves to be the width and height of the page.
+To embed the webcams into another page, add all related script files:
+```
+<script type="text/javascript" src="res/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="res/jquery-param-plugin.js"></script>
+<script type="text/javascript" src="res/timeFunctions.js"></script>
+<script type="text/javascript" src="res/exif.js"></script>
+<script type="text/javascript" src="res/settings.js"></script>
+<script type="text/javascript" src="res/camWebGrid.js"></script>
+
+```
+as well as 
+```
+<div id="innerWrapper"></div><div style="clear: both;" ></div>
+```
+where ever you want the webcams to be. As the project is now, the webcams will still try to size themselves to be the width and height of the page. includeJS.js was removed because you would need to change all the urls to the script files for it to work, or at least check that they are all correct, and if you are doing that, you might as well just copy the script links because it is 6x faster than loading the libraries through jquery.
 
 ###Waking up from hibernation
 To counteract the javascript not running when the computer goes to sleep, there is a window focus listener that is set to update everything when the window is focused on.
