@@ -51,7 +51,7 @@ var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var sourceEXIF;
 var sourceEXIFLabel;
-var DEBUG = false;
+var DEBUG = true;
 var fullscreen=false;
 
 var urlParamObjs;
@@ -75,7 +75,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 
 		var debugSpan="";
 		if (DEBUG){
-			debugSpan = "<span id=\"debugTip"+i+"\" class=\"debugTip\">Info</span>";
+			debugSpan = "<span id=\"debugTip"+i+"\" class=\"debugTip\">Debug Info</span>";
 		}
 
 		var imageLink = "";
@@ -204,8 +204,9 @@ function getMetaJSON ( url, index ) {
 		function (data) {
 			
 			cameraSeconds[index] = data.ageSeconds;
-			
-			$("#debugTip"+index).attr("title",debugMsg+" with JSON by loading "+data.fileURL.substr(-20));
+
+			if (DEBUG)
+				$("#debugTip"+index).attr("title",debugMsg+" with JSON by loading "+data.fileURL.substr(-20));
 	
 			if ( $("#cameraImage"+index).attr("src") != data.fileURL ){		
 				$("#cameraImage"+index).attr("src",data.fileURL);
