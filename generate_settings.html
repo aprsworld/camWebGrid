@@ -23,6 +23,13 @@
 							</td>
 						</tr>
 						<tr>
+							<th>debug</th><td class="example" > false</td>
+							<td id="debug">
+								<input type="radio" name="debug" value="true" />true<br>
+								<input type="radio" name="debug" value="false" checked />false
+							</td>
+						</tr>
+						<tr>
 							<th>sourceURL <span class="required">required</span></th><td class="example" > http://cam.aprsworld.com/A4241/latest.jpg</td>
 							<td id="sourceURL">
 								<input type="text" name="sourceURL[]" value="" />
@@ -77,6 +84,7 @@
 								<input type="text" name="sourceEXIFLabel[]" value="" />
 							</td>
 						</tr>
+
 					</table>
 
 				</form>
@@ -94,6 +102,10 @@
 					<tr>
 						<th>title</th>
 						<td>Not required. change the page title, otherwise leave it out or set it to `undefined` to use the title set in the html.</td>
+					</tr>
+					<tr>
+						<th>debug</th>
+						<td>Not required. determines whether or not the orange debug box appears in the corners of the cams</td>
 					</tr>
 					<tr>
 						<th>sourceURL</th>

@@ -3,7 +3,8 @@
 settings.js
 ---
 `settings.js` is where you set up what cameras you would like to show along to their refresh rates and all other parameters. In `settings.js` there is the settingsObj which is a javascript object that holds all of the settings and a function called `additionalSettings()`. Each settings is an array and must be set up carefully:
- * `title`: Not required. change the page title, otherwise leave it out or set it to `undefined` to use the title set in the html.	
+ * `title`: Not required. change the page title, otherwise leave it out or set it to `undefined` to use the title set in the html.
+ * `debug`: Not required. determines whether or not the orange debug box appears in the corners of the cams.
  * `sourceURL`: REQUIRED! This is the source URL of the webcam. This array MUST be the same size as `sourceRefreshSeconds` as they are both required. Another important thing to note is that the `sourceURL` needs to be URI encoded. This can be done by using `encodeURIComponent("http://example.com")`
  * `sourceRefreshSeconds`: REQUIRED! This is the interval, in seconds, the webpage checks for a new image. This array MUST be the same size as `sourceURL` as they are both required.
  * `sourceLinkToFullURL`: Not required. This is the url clicking on the image will take you to. If it is not set, the image will not have a link attached to it.

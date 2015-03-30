@@ -51,7 +51,7 @@ var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var sourceEXIF;
 var sourceEXIFLabel;
-var DEBUG = true;
+var DEBUG = false;
 var fullscreen=false;
 
 var urlParamObjs;
@@ -682,6 +682,13 @@ $( document ).ready(function(){
 		resize();
 	});
 
+	/* determines if the debug box appears */
+	if ( urlParamObjs.debug && (urlParamObjs.debug+"").toUpperCase() != "FALSE" ){
+		console.log("debug= "+urlParamObjs.debug);
+		DEBUG = urlParamObjs.debug;
+
+	}
+
 	/* create the grid */
 	createCamBlocks(sourceURL,sourceRefreshSeconds);
 
@@ -701,6 +708,7 @@ $( document ).ready(function(){
 
 	if ( typeof urlParamObjs.title !== 'undefined')
 		document.title= urlParamObjs.title;
+
 
 
 });

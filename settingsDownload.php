@@ -81,11 +81,22 @@ function getTitle(){
 	return "undefined";
 }
 
+function getDebug(){
+
+	if ( isset($_POST["debug"]) && $_POST["debug"] != "false"  ) {
+		return sprintf("debug: %s,",$_POST["debug"]);
+	}
+
+	return "";
+}
+
 ?>
 
 var settingsObj = {
 
 	title: <? echo getTitle(); ?>,
+
+	<? echo getDebug(); ?>
 
 	sourceURL: [<? echo getURLJSArray("sourceURL"); ?>],
 	

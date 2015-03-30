@@ -21,11 +21,14 @@ var settingsObj = {
 	
 	sourceEXIF: [undefined,undefined,undefined,undefined],
 
-	sourceEXIFLabel: [undefined,undefined,undefined,undefined]
+	sourceEXIFLabel: [undefined,undefined,undefined,undefined],
+
+	debug: false
 
 }
 
 function additionalSettings(){
 
+	
 
 }
