@@ -683,7 +683,7 @@ $( document ).ready(function(){
 	});
 
 	/* determines if the debug box appears */
-	if ( urlParamObjs.debug && (urlParamObjs.debug+"").toUpperCase() != "FALSE" ){
+	if ( urlParamObjs.debug && (urlParamObjs.debug+"").toUpperCase() == "TRUE" ){
 		console.log("debug= "+urlParamObjs.debug);
 		DEBUG = urlParamObjs.debug;
 
