@@ -17,6 +17,12 @@
 				<form id="form" method="post" action="settingsDownload.php" >
 					<table>
 						<tr>
+							<th>Page Title</th><td class="example" > Page Title</td>
+							<td id="title">
+								<input type="text" name="title" value="" />
+							</td>
+						</tr>
+						<tr>
 							<th>sourceURL <span class="required">required</span></th><td class="example" > http://cam.aprsworld.com/A4241/latest.jpg</td>
 							<td id="sourceURL">
 								<input type="text" name="sourceURL[]" value="" />
@@ -85,6 +91,10 @@
 
 				<h4>README exerpt:</h4>
 				<table>
+					<tr>
+						<th>title</th>
+						<td>Not required. change the page title, otherwise leave it out or set it to `undefined` to use the title set in the html.</td>
+					</tr>
 					<tr>
 						<th>sourceURL</th>
 						<td>REQUIRED! This is the source URL of the webcam. This array MUST be the same size as `sourceRefreshSeconds` as they are both required.</td>

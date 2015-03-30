@@ -72,11 +72,20 @@ function getURLJSArray ($id) {
 
 }
 
+function getTitle(){
 
+	if ( isset($_POST["title"]) && $_POST["title"] != ""  ) {
+		return sprintf("\"%s\"",$_POST["title"]);
+	}
+
+	return "undefined";
+}
 
 ?>
 
 var settingsObj = {
+
+	title: <? echo getTitle(); ?>,
 
 	sourceURL: [<? echo getURLJSArray("sourceURL"); ?>],
 	
