@@ -132,7 +132,7 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+EXIFOverlay+debugSpan+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><img title=\"Fullscreen\" src=\"res/images/fullscreen.png\"></div></div>");
+		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+EXIFOverlay+debugSpan+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><div title=\"Fullscreen\" class=\"imageFullscreenExpand\" ></div></div></div>");
 
 		$("#debugTip"+i).attr("title","Updated at page load");
 
@@ -405,7 +405,7 @@ function resize(){
 		$(".gridBox").css( "line-height", ((($("#wrapper").height()*.85)/rows)+"px" ));
 
 		$("#innerWrapper").css( "width", $(window).width()*.95 );
-		$(".expandButton").html("<img title=\"Fullscreen\" src=\"res/images/fullscreen.png\">");
+		$(".expandButton").html("<div title=\"Fullscreen\" class=\"imageFullscreenExpand\"></div>");
 
 		if ( $(".gridBox").width()/$(".gridBox").height() < 1 ) {
 			//console.log("tall");
@@ -536,11 +536,15 @@ function overrideSettings(){
 /* toggles fullscreen */
 function expand( gridBox ){
 
+	
+
 	/* get the index from the button's id */
 	var index = gridBox.id.substr(7);
 
+	console.log("called expand= "+index);
+
 	/* Checks if we are going to fullscreen or returning from it */
-	if ($("#expButt"+index).html() == "<img title=\"Fullscreen\" src=\"res/images/fullscreen.png\">") {
+	if ($("#expButt"+index).html() == "<div title=\"Fullscreen\" class=\"imageFullscreenExpand\"></div>") {
 
 		/* set fullscreen to true */		
 		fullscreen = true;		
@@ -552,7 +556,7 @@ function expand( gridBox ){
 			if ( i == index ) {
 					$("#gridBox"+index).css({"width": "100%","height": "100%","max-height": ($(window).height()*.9)+"px"});
 					$("#cameraImage"+index).css({"height": (($(window).height()*.9))+"px" });
-					$("#expButt"+index).html("<img title=\"Exit Fullscreen\" src=\"res/images/contract.png\">");
+					$("#expButt"+index).html("<div title=\"Fullscreen\" class=\"imageFullscreenContract\"></div>");
 			} else {
 			/* hide the ones we do not want fullscreen */
 				$("#gridBox"+i).hide();
