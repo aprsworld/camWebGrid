@@ -1,7 +1,7 @@
 
 var settingsObj = {
 
-	title: undefined,
+	title: "Settings are title worthy now",
 
 	sourceURL: [encodeURIComponent("http://cam.aprsworld.com/A4241/latest.jpg"),encodeURIComponent("http://cam.aprsworld.com/A4235/latest.jpg"),encodeURIComponent("http://cam.aprsworld.com/A4236/latest.jpg"),encodeURIComponent("http://cam.aprsworld.com/A4606/latest.jpg")],
 	
@@ -26,7 +26,6 @@ var settingsObj = {
 }
 
 function additionalSettings(){
-
 
 
 }
