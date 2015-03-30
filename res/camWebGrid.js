@@ -41,7 +41,6 @@
         If it is specified, then we overlay this text across the top of the image.
 
 */
-
 var sourceURL;
 var sourceMetaJSON;
 var sourceMetaRefreshSeconds;
@@ -52,7 +51,7 @@ var sourceStaleSeconds;
 var sourceOverlayTextTop;
 var sourceEXIF;
 var sourceEXIFLabel;
-
+var DEBUG = false;
 var fullscreen=false;
 
 var urlParamObjs;
@@ -74,6 +73,10 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 	/* iterate through urls */
 	for ( var i = 0 ; i < sourceURL.length ; i++ ) {
 
+		var debugSpan="";
+		if (DEBUG){
+			debugSpan = "<span id=\"debugTip"+i+"\" class=\"debugTip\">Info</span>";
+		}
 
 		var imageLink = "";
 
@@ -129,8 +132,9 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		}
 
 		/* create camera block */
-		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+EXIFOverlay+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><img src=\"res/images/fullscreen.png\"></div></div>");
+		$("#innerWrapper").append("<div class=\"gridBox\" id=\"gridBox"+i+"\"><span id=\"stale"+i+"\" class=\"stale\">Stale</span>"+imageLink+"<span class=\"imageTimer\"><span id=\"timer"+i+"\"></span></span>"+overlay+EXIFOverlay+debugSpan+"<div id=\"expButt"+i+"\" class=\"expandButton\" onclick=\"expand(this)\" unselectable=\"on\"><img title=\"Fullscreen\" src=\"res/images/fullscreen.png\"></div></div>");
 
+		$("#debugTip"+i).attr("title","Updated at page load");
 
 
 		/* create entry for camera seconds */
@@ -148,9 +152,9 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 		
 		/* Now that the image exisits, we can set the load function */
 		if ( typeof sourceEXIF !== 'undefined' ) {
-			console.log(typeof sourceEXIF[i] !== 'undefined');
+			//console.log(typeof sourceEXIF[i] !== 'undefined');
 			if ( typeof sourceEXIF[i] !== 'undefined' ) {
-				console.log("starting exif "+i); 
+				//console.log("starting exif "+i); 
 				$("#cameraImage"+i).load(function(){ console.log("loaded image: "+this.id); updateEXIF(this.id.substr(-1)); });
 			}
 		}
@@ -159,7 +163,16 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 	resize();
 	//$(".gridBox").css( "width", "48%" );
 	/* start timer */
-	timerTick();
+	timerTick();	
+	
+	/* When the window is refocused, we will spin through the cams and update their images. This is used to right the page when waking up the screen from sleep mode */
+	$(window).focus(function() {
+		//console.log("welcome back");
+		for ( var i = 0 ; i < sourceURL.length ; i++ ){
+			console.log("refreshing: "+i);
+			updateCameraImg( i );
+		}
+	});
 
 }
 
@@ -168,7 +181,10 @@ function createCamBlocks( sourceURL, sourceRefreshSeconds ) {
 /* updates the UI for json cameras. Also returns age in seconds */
 
 function getMetaJSON ( url, index ) {
+	var d = new Date();
+	var n = d.toString();
 
+	var debugMsg = "Attempted to reload last @"+n;
 	var timeStamp = new Date().getTime();
 
 	/* JSON url may or may not already have parameters tacked onto the end. This check is made to ensure that we aren't messing with those parameters
@@ -176,22 +192,26 @@ function getMetaJSON ( url, index ) {
 	if ( url.indexOf("?") != -1 ) {
 
 		timeStamp = "&"+timeStamp;
-		console.log("Already has parameters");
+		//console.log("Already has parameters");
 
 	} else {
 
 		timeStamp = "?"+timeStamp;
-		console.log("Has no parameters");
+		//console.log("Has no parameters");
 	}
 	
 	$.getJSON(url+timeStamp,
 		function (data) {
 			
 			cameraSeconds[index] = data.ageSeconds;
-				
-			if ( $("#cameraImage"+index).attr("src") != data.fileURL )		
+			
+			$("#debugTip"+index).attr("title",debugMsg+" with JSON by loading "+data.fileURL.substr(-20));
+	
+			if ( $("#cameraImage"+index).attr("src") != data.fileURL ){		
 				$("#cameraImage"+index).attr("src",data.fileURL);
-
+			} else {
+				
+			}
 			
 
 		} 
@@ -201,8 +221,11 @@ function getMetaJSON ( url, index ) {
 
 /* update the image at the given index */
 function updateCameraImg( index ) {
+	var d = new Date();
+	var n = d.toString();
 
-	
+	var debugMsg = "Attempted to reload last @"+n;
+
 	/* if sourceMetaJSON is set for this index, get data through AJAX */
 	if ( typeof sourceMetaJSON !== 'undefined' ) {
 
@@ -213,6 +236,9 @@ function updateCameraImg( index ) {
 		} else {
 			/* this is for urls using latest.jpg */
 			var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
+		
+			$("#debugTip"+index).attr("title",debugMsg+" by loading latest.jpg");
+
 			$("#cameraImage"+index).attr("src",urlImg);
 			
 			
@@ -224,6 +250,9 @@ function updateCameraImg( index ) {
 	} else {
 		/* this is for urls using latest.jpg */
 		var urlImg = stripParam($("#cameraImage"+index).attr("src"))+"?"+ new Date().getTime();
+
+		$("#debugTip"+index).attr("title",debugMsg+" by loading latest.jpg");
+
 		$("#cameraImage"+index).attr("src",urlImg);
 
 		/* cannot go stale without json, so just reset the timer to 0 */
@@ -249,7 +278,7 @@ function updateEXIF(index){
 	if ( typeof sourceEXIF !== 'undefined' ) {
 
 		if ( typeof sourceEXIF[index] !== 'undefined' ) {
-			console.log("update exif: "+index);
+			//console.log("update exif: "+index);
 
 			/* get picture element to update */
 			var elem = document.getElementById("cameraImage"+index);
@@ -365,22 +394,25 @@ function resize(){
 		var rows = getRows(sourceURL.length);
 		var cols = getCols(sourceURL.length);
 
+		$("#wrapper").css( "width", ((($(window).width()))+"px" ));
+		$("#wrapper").css( "height", (fillHeight()+"px" ));
+
 		/* set the width and height based on the the screen size, divided by the number of cols and rows (respectively) */
-		$(".gridBox").css( "width", ((($(window).width()*.9)/cols)+"px" ));
-		$(".gridBox").css( "height", ((($(window).height()*.85)/rows)+"px" ));
+		$(".gridBox").css( "width", ((($("#wrapper").width()*.9)/cols)+"px" ));
+		$(".gridBox").css( "height", ((($("#wrapper").height()*.85)/rows)+"px" ));
 	
 		/* the line height must be set as well so the images can be centered vertically */
-		$(".gridBox").css( "line-height", ((($(window).height()*.85)/rows)+"px" ));
+		$(".gridBox").css( "line-height", ((($("#wrapper").height()*.85)/rows)+"px" ));
 
 		$("#innerWrapper").css( "width", $(window).width()*.95 );
-		$(".expandButton").html("<img src=\"res/images/fullscreen.png\">");
+		$(".expandButton").html("<img title=\"Fullscreen\" src=\"res/images/fullscreen.png\">");
 
 		if ( $(".gridBox").width()/$(".gridBox").height() < 1 ) {
-			console.log("tall");
+			//console.log("tall");
 			$(".cameraImage").css( "width", "100%" );
 			$(".cameraImage").css( "height", "" );
 		} else {
-			console.log("wide");
+			//console.log("wide");
 			$(".cameraImage").css( "width", "" );
 			$(".cameraImage").css( "height", "100%" );
 		}
@@ -388,9 +420,9 @@ function resize(){
 		for( var i = 0 ; i < sourceURL.length ; i++ ){
 			if ( $("#cameraImage"+i).width() != 0 ) {
 				if ( $("#cameraImage"+i).width()<$(".gridBox").width() ){
-					console.log("good");
+					//console.log("good");
 				} else {
-					console.log("squish");
+					//console.log("squish");
 					$("#cameraImage"+i).css( "height", "" );
 					$("#cameraImage"+i).css( "width", "100%" );
 		
@@ -406,9 +438,20 @@ function resize(){
 
 }
 
+/* used to fill the rest of the height of the page */
+function fillHeight(){
+
+	console.log("documentHeight= "+$(document).height());
+	console.log("viewportHeight= "+$(window).height());
+	console.log("camsHeight= "+$("#wrapper").height());
+
+	return ($(window).height());
+
+}
+
 /* main timer */
 function timerTick(){
-
+	resize();
 	setInterval(function(){
 		/* iterate through camera seconds and increment the second count */
 		for (var i = 0 ; i < cameraSeconds.length ; i++ ) {
@@ -497,7 +540,7 @@ function expand( gridBox ){
 	var index = gridBox.id.substr(7);
 
 	/* Checks if we are going to fullscreen or returning from it */
-	if ($("#expButt"+index).html() == "<img src=\"res/images/fullscreen.png\">") {
+	if ($("#expButt"+index).html() == "<img title=\"Fullscreen\" src=\"res/images/fullscreen.png\">") {
 
 		/* set fullscreen to true */		
 		fullscreen = true;		
@@ -509,7 +552,7 @@ function expand( gridBox ){
 			if ( i == index ) {
 					$("#gridBox"+index).css({"width": "100%","height": "100%","max-height": ($(window).height()*.9)+"px"});
 					$("#cameraImage"+index).css({"height": (($(window).height()*.9))+"px" });
-					$("#expButt"+index).html("<img src=\"res/images/contract.png\">");
+					$("#expButt"+index).html("<img title=\"Exit Fullscreen\" src=\"res/images/contract.png\">");
 			} else {
 			/* hide the ones we do not want fullscreen */
 				$("#gridBox"+i).hide();
@@ -534,7 +577,6 @@ function expand( gridBox ){
 
 
 $( document ).ready(function(){
-	
 
 	/* adds additions settings to the settings object from settings.js */
 	additionalSettings();
@@ -651,5 +693,9 @@ $( document ).ready(function(){
 
 	/* Added this for mobile so the buttons will appear. */
 	$(".expandButton").show();
+
+	if ( typeof urlParamObjs.title !== 'undefined')
+		document.title= urlParamObjs.title;
+
 
 });

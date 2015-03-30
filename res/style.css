@@ -91,6 +91,8 @@
 	background-color: rgba(0, 0, 0, 0.75);
 	line-height: 20px;
 }
+
+/* fullscreen button container */
 .expandButton{
 
 	display: none;
@@ -113,12 +115,15 @@
 
 
 }
+
+/* effect when hovering over fullscreen button */
 .expandButton:hover{
 
 	background-color: rgba(150,150,187, 1);
 
 }
 
+/* container for fullscreened image */
 .fullscreen{
 	
 	position: fixed;
@@ -154,26 +159,44 @@
 
 }
 
+/* generate_settings text that says required for require parameters */
 .required{
 	color: red;
 	font-size: .7em;
 
 }
 
+/* generate_settings example font size */
 .example{
 	font-size: .7em;
 }
 
+/* table in generate_settings */
 #info table{
 
 	border-collapse: collapse;
 
 }
-
+/* cells in table in generate_settings */
 #info th, #info td{
 
 	border: solid 1px gray;
 	padding: 5px;
+
+}
+
+/* info div to appear when debug is true */
+.debugTip{
+
+
+	position: absolute;
+	top: 20px;
+	left: 0px;
+	padding: 10px 10px 10px 10px;
+	border-radius: 15px;
+	color:white;
+	background-color: orange;
+	line-height: normal;
 
 }
 
