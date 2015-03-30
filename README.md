@@ -116,6 +116,7 @@ Notes:
 
 To embed the webcams into another page, the page will need to have jquery loaded. Add this tag: `<script type="text/javascript" src="/camWebGrid/res/includeJS.js"></script>` as well as `<div id="innerWrapper"></div><div style="clear: both;" ></div>` where ever you want the webcams to be. As the project is now, the webcams will still try to size themselves to be the width and height of the page.
 
+###Waking up from hibernation
 To counteract the javascript not running when the computer goes to sleep, there is a window focus listener that is set to update everything when the window is focused on.
 
 ```
