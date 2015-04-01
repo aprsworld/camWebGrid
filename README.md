@@ -27,7 +27,7 @@ Note the undefined at index 0. This will make sure that no text overlay is set f
 This way you can add the text at what ever index you want without having to worry about dealing with the other indices. You also have the option of setting up your entire settings page in the `additionalSettings()` function if you would prefer to set one camera at a time. These two settings.js pages would accomplish the same thing
 
 1.
-```
+```javascript
 var settingsObj = {
 
 	sourceURL: [encodeURIComponent("http://camera1.com/A9998/latest.jpg"),
@@ -116,7 +116,7 @@ Notes:
 ###Embedding into another page
 
 To embed the webcams into another page, add all related script files:
-```
+```html
 <script type="text/javascript" src="res/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="res/jquery-param-plugin.js"></script>
 <script type="text/javascript" src="res/timeFunctions.js"></script>
@@ -126,7 +126,7 @@ To embed the webcams into another page, add all related script files:
 
 ```
 as well as 
-```
+```html
 <div id="innerWrapper"></div><div style="clear: both;" ></div>
 ```
 where ever you want the webcams to be. As the project is now, the webcams will still try to size themselves to be the width and height of the page. `includeJS.js` was removed because you would need to change all the urls to the script files for it to work, or at least check that they are all correct, and if you are doing that, you might as well just copy the script links because it is 6x faster than loading the libraries through jquery.
@@ -134,7 +134,7 @@ where ever you want the webcams to be. As the project is now, the webcams will s
 ###Waking up from hibernation
 To counteract the javascript not running when the computer goes to sleep, there is a window focus listener that is set to update everything when the window is focused on.
 
-```
+```javascript
 	$(window).focus(function() {
 		//console.log("welcome back");
 		for ( var i = 0 ; i < sourceURL.length ; i++ ){
